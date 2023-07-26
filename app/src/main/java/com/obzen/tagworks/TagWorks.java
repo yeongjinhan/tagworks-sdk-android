@@ -35,7 +35,6 @@ import java.util.UUID;
 
 public class TagWorks {
 
-    private static final String LOG_TAG = "TagWorks";
     private static final String EVENT_TAG = "obzen";
     private static final String PATTERN_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     private static Context mContext;
