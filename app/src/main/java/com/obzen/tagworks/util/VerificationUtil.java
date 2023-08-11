@@ -26,14 +26,13 @@ public final class VerificationUtil {
     /**
      * siteId 값의 유효성을 검증합니다.
      * @param value TagWorks 수집 컨테이너 siteId 값
-     * @return TagWorks 수집 컨테이너 siteId 값
+     * @return 유효성 여부
      * @throws RuntimeException 유효하지 않은 SiteId
      *
      * @author hanyj
      * @since  v1.0.0 2023.08.10
      */
-    @NonNull
-    public static String checkValidSiteId(@NonNull String value){
+    public static boolean checkValidSiteId(@NonNull String value){
         try{
             if(!value.contains(",")) throw new Exception();
             String[] val_arr = value.split(",");
@@ -43,44 +42,42 @@ public final class VerificationUtil {
         } catch (Exception e) {
             throw new RuntimeException("invalid SiteId");
         }
-        return value;
+        return true;
     }
 
     /**
      * 수집서버 주소 값의 유효성을 검증합니다.
      * @param value TagWorks 수집서버 baseUrl 값
-     * @return TagWorks 수집서버 baseUrl 값
+     * @return 유효성 여부
      * @throws RuntimeException 유효하지 않은 baseUrl
      *
      * @author hanyj
      * @since  v1.0.0 2023.08.10
      */
-    @NonNull
-    public static String checkValidBaseUrl(@NonNull String value){
+    public static boolean checkValidBaseUrl(@NonNull String value){
         try {
             new URL(value);
         } catch (MalformedURLException e) {
             throw new RuntimeException("invalid BaseUrl");
         }
-        return value;
+        return true;
     }
 
     /**
      * VisitorId의 유효성을 검증합니다.
      * @param value TagWorks VisitorId 값
-     * @return TagWorks VisitorId 값
+     * @return 유효성 여부
      * @throws RuntimeException 유효하지 않은 VisitorId
      *
      * @author hanyj
      * @since  v1.0.0 2023.08.10
      */
-    @NonNull
-    public static String checkValidVisitorId(@NonNull String value){
+    public static boolean checkValidVisitorId(@NonNull String value){
         try{
             if(!Pattern.matches(PATTERN_VALID_UUID, value)) throw new Exception();
         } catch (Exception e) {
             throw new RuntimeException("invalid VisitorId");
         }
-        return value;
+        return true;
     }
 }
