@@ -14,7 +14,9 @@ package com.obzen.tagworks.constants;
  */
 public enum TagWorksKey {
 
-    PRE_KEY_VISITOR_ID("tagworks.visitorid");
+    PRE_KEY_VISITOR_ID("tagworks.visitorid"),
+    PRE_KEY_USER_ID("tagworks.userid"),
+    PRE_KEY_OPT_OUT("tagworks.optout");
 
     private final String value;
     TagWorksKey(String value) {

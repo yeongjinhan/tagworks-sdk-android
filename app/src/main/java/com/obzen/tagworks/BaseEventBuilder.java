@@ -20,10 +20,9 @@ import java.util.Map;
 public abstract class BaseEventBuilder {
     private final TagWorks tagWorks;
     private final Map<Integer, String> dimensions = new HashMap<>();
-    BaseEventBuilder(TagWorks tagWorks) {
+    BaseEventBuilder(@NonNull TagWorks tagWorks) {
         this.tagWorks = tagWorks;
     }
-
     public BaseEventBuilder dimension(@NonNull int index, @NonNull String value){
         dimensions.put(index, value);
         return this;

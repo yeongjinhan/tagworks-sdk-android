@@ -7,18 +7,19 @@
 
 package com.obzen.tagworks;
 
-import static com.obzen.tagworks.util.VerificationUtil.checkValidBaseUrl;
-import static com.obzen.tagworks.util.VerificationUtil.checkValidSiteId;
-
+import static com.obzen.tagworks.constants.TagWorksKey.*;
+import static com.obzen.tagworks.util.CommonUtil.*;
+import static com.obzen.tagworks.util.VerificationUtil.*;
 import android.content.Context;
-import android.util.ArrayMap;
-
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.obzen.tagworks.util.CommonUtil;
+import com.obzen.tagworks.util.PreferencesUtil;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * TagWorks SDK 메인 클래스입니다.
@@ -32,6 +33,9 @@ import java.util.Map;
  */
 public class TagWorks {
 
+    /**
+     * SDK 설정영역
+     */
     @GuardedBy("LOCK")
     private static final Map<String, TagWorks> INSTANCE = new HashMap<>();
     private static final Object LOCK = new Object();
@@ -42,17 +46,105 @@ public class TagWorks {
     private final String baseUrl;
 
     /**
+     * TagWorks 수집 컨테이너 siteId를 반환합니다.
+     * @return TagWorks 수집 컨테이너 siteId
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public String getSiteId(){
+        return siteId;
+    }
+
+    /**
+     * TagWorks 수집서버 주소 url을 반환합니다.
+     * @return TagWorks 수집서버 주소 url
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public String getBaseUrl(){
+        return baseUrl;
+    }
+
+    /**
+     * 사용자 식별자를 지정합니다.
+     * @param userId 방문자 식별자
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public void setUserId(String userId){
+        PreferencesUtil.setString(context, PRE_KEY_USER_ID, userId);
+    }
+
+    /**
+     * 사용자 식별자를 반환합니다.
+     * @return 사용자 식별자
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public String getUserId(){
+        return PreferencesUtil.getString(context, PRE_KEY_USER_ID);
+    }
+
+    /**
+     * 방문자 식별자를 지정합니다.
+     * @param visitorId 방문자 식별자
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public void setVisitorId(String visitorId){
+        if(checkValidVisitorId(visitorId)){
+            PreferencesUtil.setString(context, PRE_KEY_VISITOR_ID, visitorId);
+        }
+    }
+
+    /**
+     * 방문자 식별자를 반환합니다.
+     * @return 방문자 식별자
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public String getVisitorId(){
+        String visitorId = PreferencesUtil.getString(context, PRE_KEY_VISITOR_ID);
+        if(isEmpty(visitorId)){
+            visitorId = UUID.randomUUID().toString();
+            setVisitorId(visitorId);
+        }
+        return visitorId;
+    }
+
+    /**
+     * 이벤트 수집 여부를 지정합니다.
+     * @param optOut 이벤트 수집 여부
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public void setOptOut(boolean optOut){
+        PreferencesUtil.setBoolean(context, PRE_KEY_OPT_OUT, optOut);
+    }
+
+    /**
+     * 이벤트 수집 여부를 반환합니다.
+     * @return 이벤트 수집 여부
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public boolean getOptOut(){
+        return PreferencesUtil.getBoolean(context, PRE_KEY_OPT_OUT);
+    }
+
+    /**
      * TagWorks 클래스 생성자
      * @param context Application Context
      * @param config TagWorks SDK 설정 객체
      * @author hanyj
      * @since  v1.0.0 2023.08.11
      */
-    protected TagWorks(Context context, TagWorksConfig config){
+    private TagWorks(Context context, TagWorksConfig config){
         this.context = context;
         this.config = config;
-        this.siteId = this.config.getSiteId();
-        this.baseUrl = this.config.getBaseUrl();
+        this.siteId = config.getSiteId();
+        this.baseUrl = config.getBaseUrl();
+        this.contentBaseUrl = String.format("https://%s/", context.getPackageName());
     }
 
     /**
@@ -135,12 +227,38 @@ public class TagWorks {
         }
     }
 
+    /**
+     * 수집 영역
+     */
+
+    private final String contentBaseUrl;
+    private String contentUrl;
+
+    /**
+     * TagWorks 이벤트 수집 빌더 클래스입니다.
+     * For example:
+     * <pre>
+     *     TagWorks.event(TagEvent.CLICK, "testValue", "/test/test2");
+     *     TagWorks.event(TagEvent.CLICK, "testValue");
+     *     TagWorks.event("CustomEvent", "testValue", "/test/test2");
+     * </pre>
+     * @author hanyj
+     * @version v1.0.0 2023.08.10
+     */
     public static class EventBuilder extends BaseEventBuilder{
 
         private final String eventKey;
         private final String eventValue;
         private final String userPath;
 
+        /**
+         * EventBuilder의 기본 생성자입니다.
+         * @param eventKey 이벤트 key
+         * @param eventValue 이벤트 value
+         * @param userPath 사용자 정의 이벤트 path
+         * @author hanyj
+         * @since  v1.0.0 2023.08.14
+         */
         EventBuilder(@NonNull TagWorks tagWorks, @NonNull String eventKey, @Nullable String eventValue, @Nullable String userPath) {
             super(tagWorks);
             this.eventKey = eventKey;
@@ -148,12 +266,78 @@ public class TagWorks {
             this.userPath = userPath;
         }
 
+        /**
+         * EventBuilder의 기본 생성자입니다.
+         * @param eventKey 이벤트 key
+         * @param eventValue 이벤트 value
+         * @author hanyj
+         * @since  v1.0.0 2023.08.14
+         */
+        EventBuilder(@NonNull TagWorks tagWorks, @NonNull String eventKey, @Nullable String eventValue) {
+            super(tagWorks);
+            this.eventKey = eventKey;
+            this.eventValue = eventValue;
+            this.userPath = null;
+        }
+
+        /**
+         * 저장된 이벤트를 발송합니다.
+         * @author hanyj
+         * @since  v1.0.0 2023.08.14
+         */
         @Override
         public void push() {
 
         }
     }
-    public static EventBuilder event(@NonNull TagEvent eventKey, @Nullable String eventValue, @Nullable String userPath) {
+
+    /**
+     * 사용자 이벤트를 수집합니다.
+     * @param eventKey 이벤트 key
+     * @param eventValue 이벤트 value
+     * @return EventBuilder 인스턴스
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public static EventBuilder event(@NonNull TagEvent eventKey, @NonNull String eventValue) {
+        return new EventBuilder(getInstance(), eventKey.getValue(), eventValue);
+    }
+
+    /**
+     * 사용자 이벤트를 수집합니다.
+     * @param eventKey 이벤트 key
+     * @param eventValue 이벤트 value
+     * @return EventBuilder 인스턴스
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public static EventBuilder event(@NonNull String eventKey, @NonNull String eventValue) {
+        return new EventBuilder(getInstance(), eventKey, eventValue);
+    }
+
+    /**
+     * 사용자 이벤트를 수집합니다.
+     * @param eventKey 이벤트 key
+     * @param eventValue 이벤트 value
+     * @param userPath 사용자 정의 이벤트 path
+     * @return EventBuilder 인스턴스
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public static EventBuilder event(@NonNull TagEvent eventKey, @NonNull String eventValue, @Nullable String userPath) {
         return new EventBuilder(getInstance(), eventKey.getValue(), eventValue, userPath);
+    }
+
+    /**
+     * 사용자 이벤트를 수집합니다.
+     * @param eventKey 이벤트 key
+     * @param eventValue 이벤트 value
+     * @param userPath 사용자 정의 이벤트 path
+     * @return EventBuilder 인스턴스
+     * @author hanyj
+     * @since  v1.0.0 2023.08.14
+     */
+    public static EventBuilder event(@NonNull String eventKey, @NonNull String eventValue, @Nullable String userPath) {
+        return new EventBuilder(getInstance(), eventKey, eventValue, userPath);
     }
 }

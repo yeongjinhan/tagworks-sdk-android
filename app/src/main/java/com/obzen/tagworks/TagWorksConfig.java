@@ -9,6 +9,7 @@ package com.obzen.tagworks;
 
 import androidx.annotation.NonNull;
 
+
 /**
  * TagWorks SDK 설정 클래스입니다.
  * For example:
@@ -26,7 +27,6 @@ public final class TagWorksConfig {
     public static final class Builder {
         private String siteId;
         private String baseUrl;
-
         public Builder(){}
 
         public Builder(@NonNull TagWorksConfig config) {
@@ -66,4 +66,5 @@ public final class TagWorksConfig {
     public String getBaseUrl() {
         return baseUrl;
     }
+
 }

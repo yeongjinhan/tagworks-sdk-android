@@ -24,7 +24,7 @@ public class PreferencesUtil {
     private static final long DEFAULT_VALUE_LONG = -1L;
     private static final float DEFAULT_VALUE_FLOAT = -1F;
 
-    private static SharedPreferences getPreferences(Context context) {
+    private static synchronized SharedPreferences getPreferences(Context context) {
         return context.getSharedPreferences(PREFERENCES_TAG, Context.MODE_PRIVATE);
     }
     public static void setString(Context context, TagWorksKey key, String value) {
