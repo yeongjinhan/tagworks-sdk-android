@@ -27,6 +27,7 @@ import java.util.UUID;
  * <pre>
  *     TagWorks.initializeSdk();
  *     TagWorks.getInstance();
+ *     TagWorks.event();
  * </pre>
  * @author hanyj
  * @version v1.0.0 2023.08.10
@@ -145,6 +146,7 @@ public class TagWorks {
         this.siteId = config.getSiteId();
         this.baseUrl = config.getBaseUrl();
         this.contentBaseUrl = String.format("https://%s/", context.getPackageName());
+        this.dimensions = new HashMap<>();
     }
 
     /**
@@ -233,6 +235,27 @@ public class TagWorks {
 
     private final String contentBaseUrl;
     private String contentUrl;
+    private final HashMap<Integer, String> dimensions;
+
+    /**
+     * 현재 contentUrl을 지정합니다.
+     * @param path contentUrl path
+     * @author hanyj
+     * @since  v1.0.0 2023.08.11
+     */
+    private void setContentUrl(String path){
+        contentUrl = contentBaseUrl + path;
+    }
+
+    /**
+     * 현재 contentUrl을 반환합니다.
+     * @return 현재 contentUrl
+     * @author hanyj
+     * @since  v1.0.0 2023.08.11
+     */
+    public String getContentUrl(){
+        return contentUrl;
+    }
 
     /**
      * TagWorks 이벤트 수집 빌더 클래스입니다.
