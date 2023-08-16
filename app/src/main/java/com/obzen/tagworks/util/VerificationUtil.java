@@ -25,14 +25,13 @@ public final class VerificationUtil {
 
     /**
      * siteId 값의 유효성을 검증합니다.
-     * @param value TagWorks 수집 컨테이너 siteId 값
-     * @return 유효성 여부
-     * @throws RuntimeException 유효하지 않은 SiteId
      *
+     * @param value TagWorks 수집 컨테이너 siteId 값
+     * @throws RuntimeException 유효하지 않은 SiteId
      * @author hanyj
-     * @since  v1.0.0 2023.08.10
+     * @since v1.0.0 2023.08.10
      */
-    public static boolean checkValidSiteId(@NonNull String value){
+    public static void checkValidSiteId(@NonNull String value){
         try{
             if(!value.contains(",")) throw new Exception();
             String[] val_arr = value.split(",");
@@ -42,25 +41,22 @@ public final class VerificationUtil {
         } catch (Exception e) {
             throw new RuntimeException("invalid SiteId");
         }
-        return true;
     }
 
     /**
      * 수집서버 주소 값의 유효성을 검증합니다.
-     * @param value TagWorks 수집서버 baseUrl 값
-     * @return 유효성 여부
-     * @throws RuntimeException 유효하지 않은 baseUrl
      *
+     * @param value TagWorks 수집서버 baseUrl 값
+     * @throws RuntimeException 유효하지 않은 baseUrl
      * @author hanyj
-     * @since  v1.0.0 2023.08.10
+     * @since v1.0.0 2023.08.10
      */
-    public static boolean checkValidBaseUrl(@NonNull String value){
+    public static void checkValidBaseUrl(@NonNull String value){
         try {
             new URL(value);
         } catch (MalformedURLException e) {
             throw new RuntimeException("invalid BaseUrl");
         }
-        return true;
     }
 
     /**
@@ -68,7 +64,6 @@ public final class VerificationUtil {
      * @param value TagWorks VisitorId 값
      * @return 유효성 여부
      * @throws RuntimeException 유효하지 않은 VisitorId
-     *
      * @author hanyj
      * @since  v1.0.0 2023.08.10
      */

@@ -243,7 +243,7 @@ public class TagWorks {
      * @author hanyj
      * @since  v1.0.0 2023.08.11
      */
-    private void setContentUrl(String path){
+    public void setContentUrl(String path){
         contentUrl = contentBaseUrl + path;
     }
 
@@ -315,7 +315,7 @@ public class TagWorks {
     }
 
     /**
-     * 사용자 이벤트를 수집합니다.
+     * 이벤트를 수집합니다.
      * @param eventKey 이벤트 key
      * @param eventValue 이벤트 value
      * @return EventBuilder 인스턴스
@@ -327,7 +327,7 @@ public class TagWorks {
     }
 
     /**
-     * 사용자 이벤트를 수집합니다.
+     * 사용자 정의 이벤트를 수집합니다.
      * @param eventKey 이벤트 key
      * @param eventValue 이벤트 value
      * @return EventBuilder 인스턴스
@@ -339,7 +339,7 @@ public class TagWorks {
     }
 
     /**
-     * 사용자 이벤트를 수집합니다.
+     * 사용자 정의 경로를 포함한 이벤트를 수집합니다.
      * @param eventKey 이벤트 key
      * @param eventValue 이벤트 value
      * @param userPath 사용자 정의 이벤트 path
@@ -352,7 +352,7 @@ public class TagWorks {
     }
 
     /**
-     * 사용자 이벤트를 수집합니다.
+     * 사용자 정의 경로를 포함한 사용자 정의 이벤트를 수집합니다.
      * @param eventKey 이벤트 key
      * @param eventValue 이벤트 value
      * @param userPath 사용자 정의 이벤트 path

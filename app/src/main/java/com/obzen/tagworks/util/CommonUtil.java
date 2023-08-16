@@ -18,8 +18,8 @@ import java.util.Map;
  * @version v1.0.0 2023.08.14
  */
 public class CommonUtil {
-    @NonNull
-    public static boolean isEmpty(Object obj){
+
+    public static boolean isEmpty(@NonNull Object obj){
         if (obj == null)
             return true;
         if (obj instanceof String)
