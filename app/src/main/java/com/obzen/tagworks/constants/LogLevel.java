@@ -5,7 +5,7 @@
 //  Copyright (c) 2023 obzen All rights reserved.
 //
 
-package com.obzen.tagworks;
+package com.obzen.tagworks.constants;
 
 public enum LogLevel {
     VERBOSE,

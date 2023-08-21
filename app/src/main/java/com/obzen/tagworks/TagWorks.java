@@ -15,7 +15,7 @@ import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.obzen.tagworks.util.CommonUtil;
+import com.obzen.tagworks.helper.DeviceInfo;
 import com.obzen.tagworks.util.PreferencesUtil;
 import java.util.HashMap;
 import java.util.Map;
@@ -147,6 +147,7 @@ public class TagWorks {
         this.baseUrl = config.getBaseUrl();
         this.contentBaseUrl = String.format("https://%s/", context.getPackageName());
         this.dimensions = new HashMap<>();
+        this.deviceInfo = new DeviceInfo(context);
     }
 
     /**
@@ -236,6 +237,7 @@ public class TagWorks {
     private final String contentBaseUrl;
     private String contentUrl;
     private final HashMap<Integer, String> dimensions;
+    private final DeviceInfo deviceInfo;
 
     /**
      * 현재 contentUrl을 지정합니다.
@@ -255,6 +257,48 @@ public class TagWorks {
      */
     public String getContentUrl(){
         return contentUrl;
+    }
+
+    /**
+     * 기기의 UserAgnet를 반환합니다.
+     * @return UserAgnet
+     * @author hanyj
+     * @since  v1.0.0 2023.08.21
+     */
+    public String getUserAgent(){
+        return deviceInfo.getUserAgent();
+    }
+
+    /**
+     * 공용 사용자 정의 디멘전을 지정합니다.
+     * @param index 디멘전 index
+     * @param value 디멘전 value
+     * @author hanyj
+     * @since  v1.0.0 2023.08.21
+     */
+    public void setDimension(int index, String value){
+        dimensions.put(index, value);
+    }
+
+    /**
+     * 공용 사용자 정의 디멘전 value를 반환합니다.
+     * @param index 디멘전 index
+     * @return 디멘전 value
+     * @author hanyj
+     * @since  v1.0.0 2023.08.21
+     */
+    public String getDimension(int index){
+        return dimensions.get(index);
+    }
+
+    /**
+     * 공용 사용자 정의 디멘전을 반환합니다.
+     * @return 디멘전 Map
+     * @author hanyj
+     * @since  v1.0.0 2023.08.21
+     */
+    public HashMap<Integer, String> getDimensions(){
+        return dimensions;
     }
 
     /**

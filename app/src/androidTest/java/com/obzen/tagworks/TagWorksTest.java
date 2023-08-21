@@ -43,4 +43,19 @@ public class TagWorksTest {
     public void TagWorksEventHandleTest(){
         TagWorks.event(TagEvent.CLICK, "testValue", "/test/test2");
     }
+
+    @Test
+    public void TagWorksUserAgentTest(){
+        Log.d(TAG, TagWorks.getInstance().getUserAgent());
+    }
+
+    @Test
+    public void TagWorksDimensionTest(){
+        TagWorks.getInstance().setDimension(0, "test0");
+        Log.d(TAG, TagWorks.getInstance().getDimension(0));
+        TagWorks.getInstance().setDimension(1, "test1");
+        Log.d(TAG, TagWorks.getInstance().getDimension(1));
+        TagWorks.getInstance().setDimension(0, "test999");
+        Log.d(TAG, TagWorks.getInstance().getDimension(0));
+    }
 }

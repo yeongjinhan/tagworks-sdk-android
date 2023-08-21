@@ -7,10 +7,6 @@
 
 package com.obzen.tagworks.util;
 
-import android.util.Log;
-
-import com.obzen.tagworks.LogLevel;
-
 /**
  * TagWorks SDK 내에서 사용되는 Logger 클래스입니다.
  * @author hanyj
