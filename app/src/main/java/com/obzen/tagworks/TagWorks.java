@@ -18,13 +18,12 @@ import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.obzen.tagworks.constants.TagWorksParams;
+import com.obzen.tagworks.constants.QueryParams;
 import com.obzen.tagworks.data.Event;
 import com.obzen.tagworks.helper.DeviceInfo;
 import com.obzen.tagworks.util.PreferencesUtil;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -45,7 +44,8 @@ public class TagWorks {
      */
     @GuardedBy("LOCK")
     private static final Map<String, TagWorks> INSTANCE = new HashMap<>();
-    private static final Object LOCK = new Object();
+    private static final Object INSTANCE_LOCK = new Object();
+    private static final Object PUSH_LOCK = new Object();
     private static final String INSTANCE_KEY = "TAGWORKS_SDK";
     private final Context context;
     private final TagWorksConfig config;
@@ -169,6 +169,8 @@ public class TagWorks {
         if(instance == null){
             throw new IllegalStateException("not initialized TagWorks");
         }
+
+        Log.d("TagWorks", "getInstance Call -->" + instance.hashCode());
         return instance;
     }
 
@@ -183,7 +185,7 @@ public class TagWorks {
      */
     @NonNull
     public static TagWorks initializeSdk(@NonNull Context context, @NonNull String siteId, @NonNull String baseUrl){
-        synchronized(LOCK){
+        synchronized(INSTANCE_LOCK){
             if(INSTANCE.containsKey(INSTANCE_KEY)){
                 return getInstance();
             }
@@ -208,7 +210,7 @@ public class TagWorks {
      */
     @NonNull
     public static TagWorks initializeSdk(@NonNull Context context, @NonNull TagWorksConfig config){
-        synchronized(LOCK){
+        synchronized(INSTANCE_LOCK){
             if(INSTANCE.containsKey(INSTANCE_KEY)){
                 return getInstance();
             }
@@ -229,7 +231,7 @@ public class TagWorks {
     @NonNull
     private static TagWorks initialize(@NonNull Context context, @NonNull TagWorksConfig config){
         final TagWorks instance;
-        synchronized(LOCK){
+        synchronized(INSTANCE_LOCK){
             instance = new TagWorks(context, config);
             INSTANCE.put(INSTANCE_KEY, instance);
             return instance;
@@ -242,6 +244,7 @@ public class TagWorks {
 
     private final String contentBaseUrl;
     private String contentUrl;
+    private String contentReferrerUrl;
     private final HashMap<Integer, String> dimensions;
     private final DeviceInfo deviceInfo;
 
@@ -305,6 +308,26 @@ public class TagWorks {
      */
     public HashMap<Integer, String> getDimensions(){
         return dimensions;
+    }
+
+    /**
+     * 쿼리 파라미터를 주입합니다.
+     * @param event 이벤트 객체
+     * @author hanyj
+     * @since  v1.0.0 2023.08.21
+     */
+    private void injectParams(Event event){
+        event.setParams(QueryParams.SITE_ID, siteId);
+        event.setParams(QueryParams.URL_PATH, contentUrl);
+        event.setParams(QueryParams.REFERRER, contentReferrerUrl);
+        String resolution = "unknown";
+        int[] res = deviceInfo.getResolution();
+        if (res != null) resolution = String.format("%sx%s", res[0], res[1]);
+        event.setParams(QueryParams.SCREEN_RESOLUTION, resolution);
+        event.setParams(QueryParams.USER_AGENT, deviceInfo.getUserAgent());
+        event.setParams(QueryParams.LANGUAGE, deviceInfo.getLanguage());
+        event.setParams(QueryParams.USER_ID, getUserId());
+        event.setParams(QueryParams.EVENT, event.toString());
     }
 
     /**
@@ -396,17 +419,19 @@ public class TagWorks {
                 if(!isEmpty(eventValue)){
                     // to-do
                     // * pageView 이벤트 값에 url 유효성 검증 필요
+                    tagWorks.contentReferrerUrl = tagWorks.contentUrl;
                     tagWorks.setContentUrl(eventValue);
-                    Log.d("TagWorks", tagWorks.contentUrl);
                 }else{
                     // error 처리
                 }
             }
             Event event = new Event();
             event.setEvent(eventKey);
+            event.setVisitorId(tagWorks.getVisitorId());
             event.setDimensions(dimensions);
             event.setCustomUserPath(userPath);
-            Log.d("TagWorks", event.toSerializedData());
+            tagWorks.eventPush(event);
+            Log.d("TagWorks", event.toSerializeString());
         }
     }
 
@@ -458,5 +483,19 @@ public class TagWorks {
      */
     public static EventBuilder event(@NonNull String eventKey, @NonNull String eventValue, @Nullable String userPath) {
         return new EventBuilder(getInstance(), eventKey, eventValue, userPath);
+    }
+
+    /**
+     * 발송 영역
+     */
+    private void eventPush(Event event){
+        synchronized (PUSH_LOCK){
+            injectParams(event);
+            if(!getOptOut()){
+                // add Queue
+            }else{
+                // drop
+            }
+        }
     }
 }

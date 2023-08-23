@@ -10,6 +10,7 @@ package com.obzen.tagworks.helper;
 import android.content.Context;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import androidx.annotation.NonNull;

@@ -8,6 +8,8 @@ import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.obzen.tagworks.data.Event;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,7 +65,8 @@ public class TagWorksTest {
     public void TagWorksEventTest(){
         TagWorks.getInstance().setDimension(0, "test0");
         TagWorks.getInstance().setDimension(1, "test1");
-        TagWorks.event(TagEvent.CLICK, "testButton").dimension(1, "test000").push();
+        TagWorks.event(TagEvent.CLICK, "testButton", "/test/test3").dimension(1, "test000").push();
         TagWorks.event(TagEvent.PAGE_VIEW, "MainActivity/HomeFragment").push();
+        TagWorks.event(TagEvent.PAGE_VIEW, "MainActivity/ProductFragment").push();
     }
 }
