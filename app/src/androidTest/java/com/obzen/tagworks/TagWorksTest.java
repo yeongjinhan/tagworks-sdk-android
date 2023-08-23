@@ -58,4 +58,12 @@ public class TagWorksTest {
         TagWorks.getInstance().setDimension(0, "test999");
         Log.d(TAG, TagWorks.getInstance().getDimension(0));
     }
+
+    @Test
+    public void TagWorksEventTest(){
+        TagWorks.getInstance().setDimension(0, "test0");
+        TagWorks.getInstance().setDimension(1, "test1");
+        TagWorks.event(TagEvent.CLICK, "testButton").dimension(1, "test000").push();
+        TagWorks.event(TagEvent.PAGE_VIEW, "MainActivity/HomeFragment").push();
+    }
 }

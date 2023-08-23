@@ -11,14 +11,20 @@ import static com.obzen.tagworks.constants.TagWorksKey.*;
 import static com.obzen.tagworks.util.CommonUtil.*;
 import static com.obzen.tagworks.util.VerificationUtil.*;
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
+
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.obzen.tagworks.constants.TagWorksParams;
+import com.obzen.tagworks.data.Event;
 import com.obzen.tagworks.helper.DeviceInfo;
 import com.obzen.tagworks.util.PreferencesUtil;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -146,8 +152,8 @@ public class TagWorks {
         this.siteId = config.getSiteId();
         this.baseUrl = config.getBaseUrl();
         this.contentBaseUrl = String.format("https://%s/", context.getPackageName());
-        this.dimensions = new HashMap<>();
         this.deviceInfo = new DeviceInfo(context);
+        this.dimensions = new HashMap<>();
     }
 
     /**
@@ -314,9 +320,23 @@ public class TagWorks {
      */
     public static class EventBuilder extends BaseEventBuilder{
 
+        private final TagWorks tagWorks;
         private final String eventKey;
         private final String eventValue;
         private final String userPath;
+        private final Map<Integer, String> dimensions = new HashMap<>();
+
+        /**
+         * 이벤트에 사용자 정의 디멘전을 추가합니다.
+         * @param index 디멘전 index
+         * @param value 디멘전 value
+         * @author hanyj
+         * @since  v1.0.0 2023.08.23
+         */
+        public EventBuilder dimension(int index, @NonNull String value) {
+            this.dimensions.put(index, value);
+            return this;
+        }
 
         /**
          * EventBuilder의 기본 생성자입니다.
@@ -328,9 +348,11 @@ public class TagWorks {
          */
         EventBuilder(@NonNull TagWorks tagWorks, @NonNull String eventKey, @Nullable String eventValue, @Nullable String userPath) {
             super(tagWorks);
+            this.tagWorks = tagWorks;
             this.eventKey = eventKey;
             this.eventValue = eventValue;
             this.userPath = userPath;
+            mergeDimensions(tagWorks.dimensions);
         }
 
         /**
@@ -342,9 +364,25 @@ public class TagWorks {
          */
         EventBuilder(@NonNull TagWorks tagWorks, @NonNull String eventKey, @Nullable String eventValue) {
             super(tagWorks);
+            this.tagWorks = tagWorks;
             this.eventKey = eventKey;
             this.eventValue = eventValue;
             this.userPath = null;
+            mergeDimensions(tagWorks.dimensions);
+        }
+
+        /**
+         * 공용 디멘전과 이벤트 디멘전을 합칩니다.
+         * @param dimensions 디멘전
+         * @author hanyj
+         * @since  v1.0.0 2023.08.23
+         */
+        private void mergeDimensions(Map<Integer, String> dimensions){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                dimensions.forEach((key, value) -> this.dimensions.merge(key, value, (v1, v2) -> v2));
+            }else{
+                this.dimensions.putAll(dimensions);
+            }
         }
 
         /**
@@ -354,7 +392,21 @@ public class TagWorks {
          */
         @Override
         public void push() {
-
+            if(eventKey.equals(TagEvent.PAGE_VIEW.getValue()) || eventKey.equals("PageView")){
+                if(!isEmpty(eventValue)){
+                    // to-do
+                    // * pageView 이벤트 값에 url 유효성 검증 필요
+                    tagWorks.setContentUrl(eventValue);
+                    Log.d("TagWorks", tagWorks.contentUrl);
+                }else{
+                    // error 처리
+                }
+            }
+            Event event = new Event();
+            event.setEvent(eventKey);
+            event.setDimensions(dimensions);
+            event.setCustomUserPath(userPath);
+            Log.d("TagWorks", event.toSerializedData());
         }
     }
 
