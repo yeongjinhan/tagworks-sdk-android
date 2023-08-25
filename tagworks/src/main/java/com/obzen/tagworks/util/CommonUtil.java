@@ -1,5 +1,5 @@
 //
-//  CommonUtil.class
+//  CommonUtil
 //  TagWorks SDK for android
 //
 //  Copyright (c) 2023 obzen All rights reserved.

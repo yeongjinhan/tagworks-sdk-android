@@ -1,5 +1,5 @@
 //
-//  TagWorks.class
+//  TagWorks
 //  TagWorks SDK for android
 //
 //  Copyright (c) 2023 obzen All rights reserved.
@@ -21,6 +21,9 @@ import androidx.annotation.Nullable;
 import com.obzen.tagworks.constants.QueryParams;
 import com.obzen.tagworks.data.Event;
 import com.obzen.tagworks.helper.DeviceInfo;
+import com.obzen.tagworks.transmitter.EventTransmitter;
+import com.obzen.tagworks.transmitter.PacketSender;
+import com.obzen.tagworks.transmitter.PacketTransfer;
 import com.obzen.tagworks.util.PreferencesUtil;
 import java.util.HashMap;
 import java.util.Map;
@@ -154,6 +157,10 @@ public class TagWorks {
         this.contentBaseUrl = String.format("https://%s/", context.getPackageName());
         this.deviceInfo = new DeviceInfo(context);
         this.dimensions = new HashMap<>();
+        this.eventTransmitter = new EventTransmitter(
+                new PacketTransfer(baseUrl),
+                new PacketSender()
+        );
     }
 
     /**
@@ -317,6 +324,7 @@ public class TagWorks {
      * @since  v1.0.0 2023.08.21
      */
     private void injectParams(Event event){
+        event.setVisitorId(getVisitorId());
         event.setParams(QueryParams.SITE_ID, siteId);
         event.setParams(QueryParams.URL_PATH, contentUrl);
         event.setParams(QueryParams.REFERRER, contentReferrerUrl);
@@ -427,11 +435,9 @@ public class TagWorks {
             }
             Event event = new Event();
             event.setEvent(eventKey);
-            event.setVisitorId(tagWorks.getVisitorId());
             event.setDimensions(dimensions);
             event.setCustomUserPath(userPath);
             tagWorks.eventPush(event);
-            Log.d("TagWorks", event.toSerializeString());
         }
     }
 
@@ -488,11 +494,21 @@ public class TagWorks {
     /**
      * 발송 영역
      */
+
+    private final EventTransmitter eventTransmitter;
+
+    /**
+     * 이벤트를 발송합니다.
+     * @param event 이벤트 객체
+     * @author hanyj
+     * @since  v1.0.0 2023.08.24
+     */
     private void eventPush(Event event){
         synchronized (PUSH_LOCK){
             injectParams(event);
             if(!getOptOut()){
                 // add Queue
+                eventTransmitter.transmit(event);
             }else{
                 // drop
             }

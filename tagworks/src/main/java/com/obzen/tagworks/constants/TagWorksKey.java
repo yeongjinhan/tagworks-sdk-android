@@ -1,5 +1,5 @@
 //
-//  TagWorksKey.class
+//  TagWorksKey
 //  TagWorks SDK for android
 //
 //  Copyright (c) 2023 obzen All rights reserved.

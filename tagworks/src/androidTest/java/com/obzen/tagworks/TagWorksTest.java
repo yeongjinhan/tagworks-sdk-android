@@ -66,7 +66,18 @@ public class TagWorksTest {
         TagWorks.getInstance().setDimension(0, "test0");
         TagWorks.getInstance().setDimension(1, "test1");
         TagWorks.event(TagEvent.CLICK, "testButton", "/test/test3").dimension(1, "test000").push();
+        sleep(3000);
         TagWorks.event(TagEvent.PAGE_VIEW, "MainActivity/HomeFragment").push();
+        sleep(3000);
         TagWorks.event(TagEvent.PAGE_VIEW, "MainActivity/ProductFragment").push();
+        sleep(3000);
+    }
+
+    public static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  DeviceInfo.class
+//  DeviceInfo
 //  TagWorks SDK for android
 //
 //  Copyright (c) 2023 obzen All rights reserved.
@@ -64,14 +64,9 @@ public class DeviceInfo {
         try{
             DisplayMetrics displayMetrics = new DisplayMetrics();
             Display display;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                display = context.getDisplay();
-                display.getRealMetrics(displayMetrics);
-            } else {
-                WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                display = windowManager.getDefaultDisplay();
-                display.getRealMetrics(displayMetrics);
-            }
+            WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            display = windowManager.getDefaultDisplay();
+            display.getRealMetrics(displayMetrics);
             return new int[]{displayMetrics.widthPixels, displayMetrics.heightPixels};
         }catch (Exception e){
             return null;

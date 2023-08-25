@@ -1,5 +1,5 @@
 //
-//  Base.class
+//  Base
 //  TagWorks SDK for android
 //
 //  Copyright (c) 2023 obzen All rights reserved.
@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.obzen.tagworks.constants.QueryParams;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -61,10 +62,28 @@ abstract class Base {
     public String toSerializeString() {
         StringBuilder paramsStringBuilder = new StringBuilder();
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            paramsStringBuilder.append(entry.getKey()).append(DELIMITER_MAPS).append(entry.getValue()).append(DELIMITER_PARAMS);
+            paramsStringBuilder.append(urlEncodeUTF8(entry.getKey())).append(DELIMITER_MAPS).append(urlEncodeUTF8(entry.getValue())).append(DELIMITER_PARAMS);
         }
         return paramsStringBuilder
                 .deleteCharAt(paramsStringBuilder.length() - 1)
                 .toString();
+    }
+
+    private static String urlEncodeUTF8(String param) {
+        try {
+            return URLEncoder.encode(param, "UTF-8").replaceAll("\\+", "%20");
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    /**
+     * 데이터를 Map으로 반환합니다.
+     * @return 데이터 문자열
+     * @author hanyj
+     * @since  v1.0.0 2023.08.24
+     */
+    public Map<String, String> toMap(){
+        return new LinkedHashMap<>(params);
     }
 }
