@@ -23,7 +23,7 @@ import java.util.Map;
  * @author hanyj
  * @version v1.0.0 2023.08.21
  */
-abstract class Base {
+public class Base {
 
     protected static final String PATTERN_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     protected static final String DELIMITER_PARAMS = "&";

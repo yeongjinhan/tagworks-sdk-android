@@ -71,6 +71,8 @@ public class TagWorksTest {
         sleep(3000);
         TagWorks.event(TagEvent.PAGE_VIEW, "MainActivity/ProductFragment").push();
         sleep(3000);
+
+        TagWorks.testMethod(new Event());
     }
 
     public static void sleep(long millis) {

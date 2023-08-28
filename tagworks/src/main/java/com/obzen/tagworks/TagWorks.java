@@ -19,12 +19,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.obzen.tagworks.constants.QueryParams;
+import com.obzen.tagworks.data.Base;
 import com.obzen.tagworks.data.Event;
 import com.obzen.tagworks.helper.DeviceInfo;
 import com.obzen.tagworks.transmitter.EventTransmitter;
 import com.obzen.tagworks.transmitter.PacketSender;
 import com.obzen.tagworks.transmitter.PacketTransfer;
 import com.obzen.tagworks.util.PreferencesUtil;
+
+import org.jetbrains.annotations.Contract;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -149,7 +153,7 @@ public class TagWorks {
      * @author hanyj
      * @since  v1.0.0 2023.08.11
      */
-    private TagWorks(Context context, TagWorksConfig config){
+    private TagWorks(@NonNull Context context, @NonNull TagWorksConfig config){
         this.context = context;
         this.config = config;
         this.siteId = config.getSiteId();
@@ -323,7 +327,7 @@ public class TagWorks {
      * @author hanyj
      * @since  v1.0.0 2023.08.21
      */
-    private void injectParams(Event event){
+    private void injectParams(@NonNull Event event){
         event.setVisitorId(getVisitorId());
         event.setParams(QueryParams.SITE_ID, siteId);
         event.setParams(QueryParams.URL_PATH, contentUrl);
@@ -449,6 +453,7 @@ public class TagWorks {
      * @author hanyj
      * @since  v1.0.0 2023.08.14
      */
+    @NonNull
     public static EventBuilder event(@NonNull TagEvent eventKey, @NonNull String eventValue) {
         return new EventBuilder(getInstance(), eventKey.getValue(), eventValue);
     }
@@ -461,6 +466,7 @@ public class TagWorks {
      * @author hanyj
      * @since  v1.0.0 2023.08.14
      */
+    @NonNull
     public static EventBuilder event(@NonNull String eventKey, @NonNull String eventValue) {
         return new EventBuilder(getInstance(), eventKey, eventValue);
     }
@@ -474,6 +480,7 @@ public class TagWorks {
      * @author hanyj
      * @since  v1.0.0 2023.08.14
      */
+    @NonNull
     public static EventBuilder event(@NonNull TagEvent eventKey, @NonNull String eventValue, @Nullable String userPath) {
         return new EventBuilder(getInstance(), eventKey.getValue(), eventValue, userPath);
     }
@@ -487,6 +494,7 @@ public class TagWorks {
      * @author hanyj
      * @since  v1.0.0 2023.08.14
      */
+    @NonNull
     public static EventBuilder event(@NonNull String eventKey, @NonNull String eventValue, @Nullable String userPath) {
         return new EventBuilder(getInstance(), eventKey, eventValue, userPath);
     }
@@ -513,5 +521,9 @@ public class TagWorks {
                 // drop
             }
         }
+    }
+
+    public static void testMethod(Base base){
+
     }
 }
