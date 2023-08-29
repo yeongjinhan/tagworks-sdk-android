@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.obzen.tagworks.constants.QueryParams;
-import com.obzen.tagworks.data.Base;
 import com.obzen.tagworks.data.Event;
 import com.obzen.tagworks.helper.DeviceInfo;
 import com.obzen.tagworks.transmitter.EventTransmitter;
@@ -323,181 +322,40 @@ public class TagWorks {
 
     /**
      * 쿼리 파라미터를 주입합니다.
-     * @param event 이벤트 객체
+     * @param eventBack 이벤트 객체
      * @author hanyj
      * @since  v1.0.0 2023.08.21
      */
-    private void injectParams(@NonNull Event event){
-        event.setVisitorId(getVisitorId());
-        event.setParams(QueryParams.SITE_ID, siteId);
-        event.setParams(QueryParams.URL_PATH, contentUrl);
-        event.setParams(QueryParams.REFERRER, contentReferrerUrl);
+    private void injectParams(@NonNull Event eventBack){
+        eventBack.setVisitorId(getVisitorId());
+        eventBack.setParams(QueryParams.SITE_ID, siteId);
+        eventBack.setParams(QueryParams.URL_PATH, contentUrl);
+        eventBack.setParams(QueryParams.REFERRER, contentReferrerUrl);
         String resolution = "unknown";
         int[] res = deviceInfo.getResolution();
         if (res != null) resolution = String.format("%sx%s", res[0], res[1]);
-        event.setParams(QueryParams.SCREEN_RESOLUTION, resolution);
-        event.setParams(QueryParams.USER_AGENT, deviceInfo.getUserAgent());
-        event.setParams(QueryParams.LANGUAGE, deviceInfo.getLanguage());
-        event.setParams(QueryParams.USER_ID, getUserId());
-        event.setParams(QueryParams.EVENT, event.toString());
+        eventBack.setParams(QueryParams.SCREEN_RESOLUTION, resolution);
+        eventBack.setParams(QueryParams.USER_AGENT, deviceInfo.getUserAgent());
+        eventBack.setParams(QueryParams.LANGUAGE, deviceInfo.getLanguage());
+        eventBack.setParams(QueryParams.USER_ID, getUserId());
+        eventBack.setParams(QueryParams.EVENT, eventBack.toString());
     }
 
-    /**
-     * TagWorks 이벤트 수집 빌더 클래스입니다.
-     * For example:
-     * <pre>
-     *     TagWorks.event(TagEvent.CLICK, "testValue", "/test/test2");
-     *     TagWorks.event(TagEvent.CLICK, "testValue");
-     *     TagWorks.event("CustomEvent", "testValue", "/test/test2");
-     * </pre>
-     * @author hanyj
-     * @version v1.0.0 2023.08.10
-     */
-    public static class EventBuilder extends BaseEventBuilder{
 
-        private final TagWorks tagWorks;
-        private final String eventKey;
-        private final String eventValue;
-        private final String userPath;
-        private final Map<Integer, String> dimensions = new HashMap<>();
 
-        /**
-         * 이벤트에 사용자 정의 디멘전을 추가합니다.
-         * @param index 디멘전 index
-         * @param value 디멘전 value
-         * @author hanyj
-         * @since  v1.0.0 2023.08.23
-         */
-        public EventBuilder dimension(int index, @NonNull String value) {
-            this.dimensions.put(index, value);
-            return this;
-        }
 
-        /**
-         * EventBuilder의 기본 생성자입니다.
-         * @param eventKey 이벤트 key
-         * @param eventValue 이벤트 value
-         * @param userPath 사용자 정의 이벤트 path
-         * @author hanyj
-         * @since  v1.0.0 2023.08.14
-         */
-        EventBuilder(@NonNull TagWorks tagWorks, @NonNull String eventKey, @Nullable String eventValue, @Nullable String userPath) {
-            super(tagWorks);
-            this.tagWorks = tagWorks;
-            this.eventKey = eventKey;
-            this.eventValue = eventValue;
-            this.userPath = userPath;
-            mergeDimensions(tagWorks.dimensions);
-        }
 
-        /**
-         * EventBuilder의 기본 생성자입니다.
-         * @param eventKey 이벤트 key
-         * @param eventValue 이벤트 value
-         * @author hanyj
-         * @since  v1.0.0 2023.08.14
-         */
-        EventBuilder(@NonNull TagWorks tagWorks, @NonNull String eventKey, @Nullable String eventValue) {
-            super(tagWorks);
-            this.tagWorks = tagWorks;
-            this.eventKey = eventKey;
-            this.eventValue = eventValue;
-            this.userPath = null;
-            mergeDimensions(tagWorks.dimensions);
-        }
 
-        /**
-         * 공용 디멘전과 이벤트 디멘전을 합칩니다.
-         * @param dimensions 디멘전
-         * @author hanyj
-         * @since  v1.0.0 2023.08.23
-         */
-        private void mergeDimensions(Map<Integer, String> dimensions){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                dimensions.forEach((key, value) -> this.dimensions.merge(key, value, (v1, v2) -> v2));
-            }else{
-                this.dimensions.putAll(dimensions);
-            }
-        }
 
-        /**
-         * 저장된 이벤트를 발송합니다.
-         * @author hanyj
-         * @since  v1.0.0 2023.08.14
-         */
-        @Override
-        public void push() {
-            if(eventKey.equals(TagEvent.PAGE_VIEW.getValue()) || eventKey.equals("PageView")){
-                if(!isEmpty(eventValue)){
-                    // to-do
-                    // * pageView 이벤트 값에 url 유효성 검증 필요
-                    tagWorks.contentReferrerUrl = tagWorks.contentUrl;
-                    tagWorks.setContentUrl(eventValue);
-                }else{
-                    // error 처리
-                }
-            }
-            Event event = new Event();
-            event.setEvent(eventKey);
-            event.setDimensions(dimensions);
-            event.setCustomUserPath(userPath);
-            tagWorks.eventPush(event);
-        }
-    }
 
-    /**
-     * 이벤트를 수집합니다.
-     * @param eventKey 이벤트 key
-     * @param eventValue 이벤트 value
-     * @return EventBuilder 인스턴스
-     * @author hanyj
-     * @since  v1.0.0 2023.08.14
-     */
-    @NonNull
-    public static EventBuilder event(@NonNull TagEvent eventKey, @NonNull String eventValue) {
-        return new EventBuilder(getInstance(), eventKey.getValue(), eventValue);
-    }
 
-    /**
-     * 사용자 정의 이벤트를 수집합니다.
-     * @param eventKey 이벤트 key
-     * @param eventValue 이벤트 value
-     * @return EventBuilder 인스턴스
-     * @author hanyj
-     * @since  v1.0.0 2023.08.14
-     */
-    @NonNull
-    public static EventBuilder event(@NonNull String eventKey, @NonNull String eventValue) {
-        return new EventBuilder(getInstance(), eventKey, eventValue);
-    }
 
-    /**
-     * 사용자 정의 경로를 포함한 이벤트를 수집합니다.
-     * @param eventKey 이벤트 key
-     * @param eventValue 이벤트 value
-     * @param userPath 사용자 정의 이벤트 path
-     * @return EventBuilder 인스턴스
-     * @author hanyj
-     * @since  v1.0.0 2023.08.14
-     */
-    @NonNull
-    public static EventBuilder event(@NonNull TagEvent eventKey, @NonNull String eventValue, @Nullable String userPath) {
-        return new EventBuilder(getInstance(), eventKey.getValue(), eventValue, userPath);
-    }
 
-    /**
-     * 사용자 정의 경로를 포함한 사용자 정의 이벤트를 수집합니다.
-     * @param eventKey 이벤트 key
-     * @param eventValue 이벤트 value
-     * @param userPath 사용자 정의 이벤트 path
-     * @return EventBuilder 인스턴스
-     * @author hanyj
-     * @since  v1.0.0 2023.08.14
-     */
-    @NonNull
-    public static EventBuilder event(@NonNull String eventKey, @NonNull String eventValue, @Nullable String userPath) {
-        return new EventBuilder(getInstance(), eventKey, eventValue, userPath);
-    }
+
+
+
+
+
 
     /**
      * 발송 영역
@@ -507,23 +365,19 @@ public class TagWorks {
 
     /**
      * 이벤트를 발송합니다.
-     * @param event 이벤트 객체
+     * @param eventBack 이벤트 객체
      * @author hanyj
      * @since  v1.0.0 2023.08.24
      */
-    private void eventPush(Event event){
+    private void eventPush(Event eventBack){
         synchronized (PUSH_LOCK){
-            injectParams(event);
+            injectParams(eventBack);
             if(!getOptOut()){
                 // add Queue
-                eventTransmitter.transmit(event);
+                eventTransmitter.transmit(eventBack);
             }else{
                 // drop
             }
         }
-    }
-
-    public static void testMethod(Base base){
-
     }
 }

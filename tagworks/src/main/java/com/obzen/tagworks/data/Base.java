@@ -69,6 +69,7 @@ public class Base {
                 .toString();
     }
 
+    @NonNull
     private static String urlEncodeUTF8(String param) {
         try {
             return URLEncoder.encode(param, "UTF-8").replaceAll("\\+", "%20");

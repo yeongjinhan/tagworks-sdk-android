@@ -10,12 +10,9 @@ package com.obzen.tagworks.data;
 import static com.obzen.tagworks.util.CommonUtil.isEmpty;
 
 import android.os.Build;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.obzen.tagworks.constants.TagWorksParams;
-
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,7 +24,7 @@ import java.util.Map;
  * @author hanyj
  * @version v1.0.0 2023.08.21
  */
-public class Event extends Base{
+public class Event extends Base {
 
     private final HashMap<String, String> eventParams = new HashMap<>();
     private final HashMap<Integer, String> dimensions = new HashMap<>();

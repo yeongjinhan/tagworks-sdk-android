@@ -7,8 +7,6 @@
 
 package com.obzen.tagworks.transmitter;
 
-import android.text.TextUtils;
-
 import com.obzen.tagworks.data.Event;
 import com.obzen.tagworks.data.Packet;
 
@@ -30,14 +28,14 @@ public class PacketTransfer implements Transfer{
     }
 
     @Override
-    public List<Packet> transferPackets(List<Event> events) {
-        if (events.isEmpty()) {
+    public List<Packet> transferPackets(List<Event> eventBacks) {
+        if (eventBacks.isEmpty()) {
             return Collections.emptyList();
         }
-        int packetsSize = (int) Math.ceil(events.size() * 1.0 / BUFFER_SIZE);
+        int packetsSize = (int) Math.ceil(eventBacks.size() * 1.0 / BUFFER_SIZE);
         List<Packet> resultPackets = new ArrayList<>(packetsSize);
-        for (int i = 0; i < events.size(); i += BUFFER_SIZE) {
-            List<Event> batch = events.subList(i, Math.min(i + BUFFER_SIZE, events.size()));
+        for (int i = 0; i < eventBacks.size(); i += BUFFER_SIZE) {
+            List<Event> batch = eventBacks.subList(i, Math.min(i + BUFFER_SIZE, eventBacks.size()));
             final Packet packet = serializeJsonObject(batch);
             if (packet != null) {
                 resultPackets.add(packet);
@@ -47,12 +45,12 @@ public class PacketTransfer implements Transfer{
     }
 
     @Override
-    public Packet serializeJsonObject(List<Event> events) {
+    public Packet serializeJsonObject(List<Event> eventBacks) {
         try {
             JSONObject params = new JSONObject();
             JSONArray jsonArray = new JSONArray();
-            for (Event event : events) {
-                jsonArray.put(event.toSerializeString());
+            for (Event eventBack : eventBacks) {
+                jsonArray.put(eventBack.toSerializeString());
             }
             params.put("requests", jsonArray);
             return new Packet(targetUrl, params);

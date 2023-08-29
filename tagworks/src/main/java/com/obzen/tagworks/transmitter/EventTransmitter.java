@@ -45,10 +45,10 @@ public class EventTransmitter implements Transmitter{
 
                     Log.d("TagWokrs", "loop isRunning");
 
-                    List<Event> events = new ArrayList<>();
-                    queue.drainTo(events);
+                    List<Event> eventBacks = new ArrayList<>();
+                    queue.drainTo(eventBacks);
 
-                    for(Packet packet : packetTransfer.transferPackets(events)){
+                    for(Packet packet : packetTransfer.transferPackets(eventBacks)){
                         Log.d("TagWokrs", "trans data => " + packet.getBody().toString());
                         // send
                         boolean job = packetSender.send(packet);
@@ -92,8 +92,8 @@ public class EventTransmitter implements Transmitter{
     }
 
     @Override
-    public void transmit(Event event) {
-        queue.add(event);
+    public void transmit(Event eventBack) {
+        queue.add(eventBack);
         Log.d("TagWokrs", "call transmit()");
         launch();
     }

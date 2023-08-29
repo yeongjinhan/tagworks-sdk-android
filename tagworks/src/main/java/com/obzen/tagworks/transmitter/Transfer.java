@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface Transfer {
 
-    List<Packet> transferPackets(List<Event> events);
-    Packet serializeJsonObject(List<Event> events);
+    List<Packet> transferPackets(List<Event> eventBacks);
+    Packet serializeJsonObject(List<Event> eventBacks);
 
 }

@@ -15,7 +15,7 @@ public interface Transmitter {
     long getConnectionTimeOut();
     void setTransmitInterval(long transmitInterval);
     long getTransmitInterval();
-    void transmit(Event event);
+    void transmit(Event eventBack);
     void flush();
     void clear();
     boolean launch();
