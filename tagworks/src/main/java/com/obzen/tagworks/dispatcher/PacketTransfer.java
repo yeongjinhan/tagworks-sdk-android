@@ -5,37 +5,33 @@
 //  Copyright (c) 2023 obzen All rights reserved.
 //
 
-package com.obzen.tagworks.transmitter;
+package com.obzen.tagworks.dispatcher;
 
 import com.obzen.tagworks.data.Event;
 import com.obzen.tagworks.data.Packet;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PacketTransfer implements Transfer{
+public class PacketTransfer {
 
     private static final int BUFFER_SIZE = 20;
     private final String targetUrl;
-
     public PacketTransfer(String targetUrl){
         this.targetUrl = targetUrl;
     }
 
-    @Override
-    public List<Packet> transferPackets(List<Event> eventBacks) {
-        if (eventBacks.isEmpty()) {
+    public List<Packet> transferPackets(List<Event> events) {
+        if (events.isEmpty()) {
             return Collections.emptyList();
         }
-        int packetsSize = (int) Math.ceil(eventBacks.size() * 1.0 / BUFFER_SIZE);
+        int packetsSize = (int) Math.ceil(events.size() * 1.0 / BUFFER_SIZE);
         List<Packet> resultPackets = new ArrayList<>(packetsSize);
-        for (int i = 0; i < eventBacks.size(); i += BUFFER_SIZE) {
-            List<Event> batch = eventBacks.subList(i, Math.min(i + BUFFER_SIZE, eventBacks.size()));
+        for (int i = 0; i < events.size(); i += BUFFER_SIZE) {
+            List<Event> batch = events.subList(i, Math.min(i + BUFFER_SIZE, events.size()));
             final Packet packet = serializeJsonObject(batch);
             if (packet != null) {
                 resultPackets.add(packet);
@@ -44,13 +40,12 @@ public class PacketTransfer implements Transfer{
         return resultPackets;
     }
 
-    @Override
-    public Packet serializeJsonObject(List<Event> eventBacks) {
+    public Packet serializeJsonObject(List<Event> events) {
         try {
             JSONObject params = new JSONObject();
             JSONArray jsonArray = new JSONArray();
-            for (Event eventBack : eventBacks) {
-                jsonArray.put(eventBack.toSerializeString());
+            for (Event event : events) {
+                jsonArray.put(event.toSerializeString());
             }
             params.put("requests", jsonArray);
             return new Packet(targetUrl, params);

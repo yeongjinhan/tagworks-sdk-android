@@ -7,26 +7,21 @@
 
 package com.obzen.tagworks;
 
-import static com.obzen.tagworks.constants.TagWorksKey.*;
 import static com.obzen.tagworks.util.CommonUtil.*;
 import static com.obzen.tagworks.util.VerificationUtil.*;
 import android.content.Context;
 import android.util.Log;
-
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.obzen.tagworks.constants.QueryParams;
-import com.obzen.tagworks.constants.TagStandardEvent;
-import com.obzen.tagworks.constants.TagWorksParams;
+import com.obzen.tagworks.constants.StandardEvent;
+import com.obzen.tagworks.constants.StandardEventParams;
 import com.obzen.tagworks.data.Event;
-import com.obzen.tagworks.helper.DeviceInfo;
-import com.obzen.tagworks.transmitter.EventTransmitter;
-import com.obzen.tagworks.transmitter.PacketSender;
-import com.obzen.tagworks.transmitter.PacketTransfer;
+import com.obzen.tagworks.dispatcher.EventDispatcher;
+import com.obzen.tagworks.dispatcher.PacketSender;
+import com.obzen.tagworks.dispatcher.PacketTransfer;
 import com.obzen.tagworks.util.PreferencesUtil;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -46,6 +41,9 @@ public class TagWorks {
      * SDK 설정영역
      */
 
+    private static final String PRE_KEY_VISITOR_ID = "tagworks.visitorid";
+    private static final String PRE_KEY_USER_ID = "tagworks.userid";
+    private static final String PRE_KEY_OPT_OUT = "tagworks.optout";
     @GuardedBy("LOCK")
     private static final Map<String, TagWorks> INSTANCE = new HashMap<>();
     private static final Object INSTANCE_LOCK = new Object();
@@ -158,7 +156,7 @@ public class TagWorks {
         this.contentBaseUrl = String.format("https://%s/", context.getPackageName());
         this.deviceInfo = new DeviceInfo(context);
         this.dimensions = new HashMap<>();
-        this.eventTransmitter = new EventTransmitter(
+        this.eventDispatcher = new EventDispatcher(
                 new PacketTransfer(baseUrl),
                 new PacketSender()
         );
@@ -356,7 +354,7 @@ public class TagWorks {
          * @since  v1.0.0 2023.08.30
          */
         @NonNull
-        public static EventBuilder event(@NonNull TagStandardEvent eventKey, @Nullable String customUserPath){
+        public static EventBuilder event(@NonNull StandardEvent eventKey, @Nullable String customUserPath){
             return new EventBuilder(getInstance(), eventKey.getValue(), customUserPath);
         }
 
@@ -446,8 +444,8 @@ public class TagWorks {
             @Override
             public void push() {
                 Event event = new Event(dimensions);
-                event.setEvent(TagStandardEvent.PAGE_VIEW);
-                event.setEventParams(TagWorksParams.PAGE_TITLE, pageTitle);
+                event.setEvent(StandardEvent.PAGE_VIEW);
+                event.setEventParams(StandardEventParams.PAGE_TITLE, pageTitle);
                 event.setCustomUserPath(customUserPath);
                 tagWorks.setContentUrl(pagePath);
                 tagWorks.eventPush(event);
@@ -523,7 +521,7 @@ public class TagWorks {
      * 발송 영역
      */
 
-    private final EventTransmitter eventTransmitter;
+    private final EventDispatcher eventDispatcher;
 
     /**
      * 이벤트를 발송합니다.
@@ -536,7 +534,7 @@ public class TagWorks {
             injectParams(event);
             if(!getOptOut()){
                 // add Queue
-                eventTransmitter.transmit(event);
+                eventDispatcher.enqueue(event);
             }else{
                 // drop
             }

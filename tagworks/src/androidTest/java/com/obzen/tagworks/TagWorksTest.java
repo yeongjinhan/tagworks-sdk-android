@@ -7,7 +7,7 @@ import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.obzen.tagworks.constants.TagStandardEvent;
+import com.obzen.tagworks.constants.StandardEvent;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -64,7 +64,7 @@ public class TagWorksTest {
     public void TagWorksEventTest(){
         TagWorks.getInstance().setDimension(0, "test0");
         TagWorks.getInstance().setDimension(1, "test1");
-        TagWorks.EventPushBuilder.event(TagStandardEvent.CLICK,  null).dimension(1, "testzzzz").push();
+        TagWorks.EventPushBuilder.event(StandardEvent.CLICK,  null).dimension(1, "testzzzz").push();
         sleep(3000);
         TagWorks.EventPushBuilder.pageView("Main/Home", "메인화면", null).push();
         sleep(3000);

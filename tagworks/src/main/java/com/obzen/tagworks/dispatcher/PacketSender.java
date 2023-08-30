@@ -1,9 +1,13 @@
-package com.obzen.tagworks.transmitter;
+//
+//  PacketSender
+//  TagWorks SDK for android
+//
+//  Copyright (c) 2023 obzen All rights reserved.
+//
 
-import android.util.Log;
+package com.obzen.tagworks.dispatcher;
 
 import com.obzen.tagworks.data.Packet;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -11,11 +15,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class PacketSender implements Sender{
+public class PacketSender{
 
     private long timeout = 30;
 
-    @Override
     public boolean send(Packet packet) {
         HttpURLConnection urlConnection = null;
         try{
@@ -35,8 +38,6 @@ public class PacketSender implements Sender{
                     try {
                         writer.close();
                     } catch (IOException e) {
-                        // 에러 처리
-                        Log.e("TagWorks", e.getMessage());
                         e.printStackTrace();
                     }
                 }
@@ -47,7 +48,6 @@ public class PacketSender implements Sender{
 
             return successful;
         }catch (Exception e) {
-            Log.e("TagWorks", e.getMessage());
             e.printStackTrace();
             return false;
         }finally {

@@ -1,5 +1,5 @@
 //
-//  TagWorksParams
+//  StandardEventParams
 //  TagWorks SDK for android
 //
 //  Copyright (c) 2023 obzen All rights reserved.
@@ -7,7 +7,7 @@
 
 package com.obzen.tagworks.constants;
 
-public enum TagWorksParams {
+public enum StandardEventParams {
 
     VISITOR_ID("ozvid"),
     TAG_EVENT_TYPE("obz_trg_type"),
@@ -17,7 +17,7 @@ public enum TagWorksParams {
     CUSTOM_USER_PATH("obz_user_path");
 
     private final String value;
-    TagWorksParams(String value) {
+    StandardEventParams(String value) {
         this.value = value;
     }
     public String getValue() {

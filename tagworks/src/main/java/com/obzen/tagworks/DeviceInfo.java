@@ -5,7 +5,7 @@
 //  Copyright (c) 2023 obzen All rights reserved.
 //
 
-package com.obzen.tagworks.helper;
+package com.obzen.tagworks;
 
 import android.content.Context;
 import android.os.Build;
@@ -97,6 +97,7 @@ public class DeviceInfo {
             String android = getRelease();
             String model = getModel();
             String build = getBuildId();
+
             httpAgent = String.format(Locale.US,
                     "Dalvik/%s (Linux; U; Android %s; %s Build/%s)",
                     dalvik, android, model, build

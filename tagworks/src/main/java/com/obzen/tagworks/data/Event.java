@@ -13,8 +13,8 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.obzen.tagworks.constants.TagStandardEvent;
-import com.obzen.tagworks.constants.TagWorksParams;
+import com.obzen.tagworks.constants.StandardEvent;
+import com.obzen.tagworks.constants.StandardEventParams;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,7 +44,7 @@ public class Event extends Base {
      * @author hanyj
      * @since  v1.0.0 2023.08.30
      */
-    public void setEventParams(@NonNull TagWorksParams key, @Nullable String value){
+    public void setEventParams(@NonNull StandardEventParams key, @Nullable String value){
         if(!isEmpty(value)) eventParams.put(key.getValue(), value);
     }
 
@@ -65,11 +65,11 @@ public class Event extends Base {
      * @author hanyj
      * @since  v1.0.0 2023.08.23
      */
-    public void setEvent(@NonNull TagStandardEvent key){
-        eventParams.put(TagWorksParams.TAG_EVENT_TYPE.getValue(), key.getValue());
+    public void setEvent(@NonNull StandardEvent key){
+        eventParams.put(StandardEventParams.TAG_EVENT_TYPE.getValue(), key.getValue());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneOffset.UTC);
-            eventParams.put(TagWorksParams.CLIENT_DATE.getValue(), zonedDateTime.format(DateTimeFormatter.ofPattern(PATTERN_DATE_FORMAT)));
+            eventParams.put(StandardEventParams.CLIENT_DATE.getValue(), zonedDateTime.format(DateTimeFormatter.ofPattern(PATTERN_DATE_FORMAT)));
         }
     }
 
@@ -80,10 +80,10 @@ public class Event extends Base {
      * @since  v1.0.0 2023.08.23
      */
     public void setEvent(@NonNull String key){
-        eventParams.put(TagWorksParams.TAG_EVENT_TYPE.getValue(), key);
+        eventParams.put(StandardEventParams.TAG_EVENT_TYPE.getValue(), key);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneOffset.UTC);
-            eventParams.put(TagWorksParams.CLIENT_DATE.getValue(), zonedDateTime.format(DateTimeFormatter.ofPattern(PATTERN_DATE_FORMAT)));
+            eventParams.put(StandardEventParams.CLIENT_DATE.getValue(), zonedDateTime.format(DateTimeFormatter.ofPattern(PATTERN_DATE_FORMAT)));
         }
     }
 
@@ -94,7 +94,7 @@ public class Event extends Base {
      * @since  v1.0.0 2023.08.23
      */
     public void setVisitorId(@Nullable String visitorId){
-        if(!isEmpty(visitorId)) eventParams.put(TagWorksParams.VISITOR_ID.getValue(), visitorId);
+        if(!isEmpty(visitorId)) eventParams.put(StandardEventParams.VISITOR_ID.getValue(), visitorId);
     }
 
     /**
@@ -105,7 +105,7 @@ public class Event extends Base {
      * @since  v1.0.0 2023.08.23
      */
     public void setCustomUserPath(@Nullable String userPath){
-        if(!isEmpty(userPath)) eventParams.put(TagWorksParams.CUSTOM_USER_PATH.getValue(), userPath);
+        if(!isEmpty(userPath)) eventParams.put(StandardEventParams.CUSTOM_USER_PATH.getValue(), userPath);
     }
 
     /**
@@ -183,7 +183,7 @@ public class Event extends Base {
     private String serializeDimensions(){
         StringBuilder dimensionStringBuilder = new StringBuilder();
         for (Map.Entry<Integer, String> entry : dimensions.entrySet()) {
-            dimensionStringBuilder.append(TagWorksParams.DIMENSION.getValue()).append(entry.getKey()).append(DELIMITER_MAPS).append(entry.getValue()).append(DELIMITER_PARAMS);
+            dimensionStringBuilder.append(StandardEventParams.DIMENSION.getValue()).append(entry.getKey()).append(DELIMITER_MAPS).append(entry.getValue()).append(DELIMITER_PARAMS);
         }
         return dimensionStringBuilder.toString();
     }
