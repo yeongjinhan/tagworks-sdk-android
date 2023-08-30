@@ -7,7 +7,7 @@ import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.obzen.tagworks.data.Event;
+import com.obzen.tagworks.constants.TagStandardEvent;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class TagWorksTest {
 
     @Test
     public void TagWorksEventHandleTest(){
-        TagWorks.event(TagEvent.CLICK, "testValue");
+        //TagWorks.event(TagEvent.CLICK, "testValue");
     }
 
     @Test
@@ -64,14 +64,10 @@ public class TagWorksTest {
     public void TagWorksEventTest(){
         TagWorks.getInstance().setDimension(0, "test0");
         TagWorks.getInstance().setDimension(1, "test1");
-        TagWorks.event(TagEvent.CLICK, "testButton").setDimension(1, "test000").push();
+        TagWorks.EventPushBuilder.event(TagStandardEvent.CLICK,  null).dimension(1, "testzzzz").push();
         sleep(3000);
-        TagWorks.event(TagEvent.PAGE_VIEW, "MainActivity/HomeFragment").push();
+        TagWorks.EventPushBuilder.pageView("Main/Home", "메인화면", null).push();
         sleep(3000);
-        TagWorks.event(TagEvent.PAGE_VIEW, "MainActivity/ProductFragment").push();
-
-        sleep(3000);
-
     }
 
     public static void sleep(long millis) {

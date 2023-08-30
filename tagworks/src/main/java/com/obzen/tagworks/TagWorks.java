@@ -11,7 +11,6 @@ import static com.obzen.tagworks.constants.TagWorksKey.*;
 import static com.obzen.tagworks.util.CommonUtil.*;
 import static com.obzen.tagworks.util.VerificationUtil.*;
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.GuardedBy;
@@ -19,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.obzen.tagworks.constants.QueryParams;
+import com.obzen.tagworks.constants.TagStandardEvent;
+import com.obzen.tagworks.constants.TagWorksParams;
 import com.obzen.tagworks.data.Event;
 import com.obzen.tagworks.helper.DeviceInfo;
 import com.obzen.tagworks.transmitter.EventTransmitter;
@@ -26,28 +27,25 @@ import com.obzen.tagworks.transmitter.PacketSender;
 import com.obzen.tagworks.transmitter.PacketTransfer;
 import com.obzen.tagworks.util.PreferencesUtil;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * TagWorks SDK 메인 클래스입니다.
- * For example:
  * <pre>
  *     TagWorks.initializeSdk();
  *     TagWorks.getInstance();
- *     TagWorks.event();
  * </pre>
  * @author hanyj
- * @version v1.0.0 2023.08.10
+ * @version v1.0. 02023.08.10
  */
 public class TagWorks {
 
     /**
      * SDK 설정영역
      */
+
     @GuardedBy("LOCK")
     private static final Map<String, TagWorks> INSTANCE = new HashMap<>();
     private static final Object INSTANCE_LOCK = new Object();
@@ -146,7 +144,7 @@ public class TagWorks {
     }
 
     /**
-     * TagWorks 클래스 생성자
+     * TagWorks 클래스 생성자 입니다.
      * @param context Application Context
      * @param config TagWorks SDK 설정 객체
      * @author hanyj
@@ -201,8 +199,7 @@ public class TagWorks {
             }
             checkValidSiteId(siteId);
             checkValidBaseUrl(baseUrl);
-            TagWorksConfig config = new TagWorksConfig
-                    .Builder()
+            TagWorksConfig config = new TagWorksConfig.Builder()
                     .setSiteId(siteId)
                     .setBaseUrl(baseUrl)
                     .build();
@@ -251,7 +248,6 @@ public class TagWorks {
     /**
      * 수집 영역
      */
-
     private final String contentBaseUrl;
     private String contentUrl;
     private String contentReferrerUrl;
@@ -321,41 +317,207 @@ public class TagWorks {
     }
 
     /**
-     * 쿼리 파라미터를 주입합니다.
-     * @param eventBack 이벤트 객체
+     * Query 파라미터를 주입합니다.
+     * @param event 이벤트 객체
      * @author hanyj
      * @since  v1.0.0 2023.08.21
      */
-    private void injectParams(@NonNull Event eventBack){
-        eventBack.setVisitorId(getVisitorId());
-        eventBack.setParams(QueryParams.SITE_ID, siteId);
-        eventBack.setParams(QueryParams.URL_PATH, contentUrl);
-        eventBack.setParams(QueryParams.REFERRER, contentReferrerUrl);
+    private void injectParams(@NonNull Event event){
+        event.setVisitorId(getVisitorId());
+        event.setParams(QueryParams.SITE_ID, siteId);
+        event.setParams(QueryParams.URL_PATH, contentUrl);
+        event.setParams(QueryParams.REFERRER, contentReferrerUrl);
         String resolution = "unknown";
         int[] res = deviceInfo.getResolution();
         if (res != null) resolution = String.format("%sx%s", res[0], res[1]);
-        eventBack.setParams(QueryParams.SCREEN_RESOLUTION, resolution);
-        eventBack.setParams(QueryParams.USER_AGENT, deviceInfo.getUserAgent());
-        eventBack.setParams(QueryParams.LANGUAGE, deviceInfo.getLanguage());
-        eventBack.setParams(QueryParams.USER_ID, getUserId());
-        eventBack.setParams(QueryParams.EVENT, eventBack.toString());
+        event.setParams(QueryParams.SCREEN_RESOLUTION, resolution);
+        event.setParams(QueryParams.USER_AGENT, deviceInfo.getUserAgent());
+        event.setParams(QueryParams.LANGUAGE, deviceInfo.getLanguage());
+        event.setParams(QueryParams.USER_ID, getUserId());
+        event.setParams(QueryParams.EVENT, event.toString());
     }
 
+    /**
+     * TagWorks 이벤트 수집 Builder 클래스입니다.
+     * <pre>
+     *     TagWorks.EventPushBuilder.event();
+     *     TagWorks.EventPushBuilder.pageView();
+     * </pre>
+     * @author hanyj
+     * @version v1.0. 02023.08.30
+     */
+    public static class EventPushBuilder{
 
+        /**
+         * 수집할 이벤트를 지정합니다.
+         * @param eventKey 이벤트 key
+         * @param customUserPath 사용자 정의 경로
+         * @author hanyj
+         * @since  v1.0.0 2023.08.30
+         */
+        @NonNull
+        public static EventBuilder event(@NonNull TagStandardEvent eventKey, @Nullable String customUserPath){
+            return new EventBuilder(getInstance(), eventKey.getValue(), customUserPath);
+        }
 
+        /**
+         * 수집할 이벤트를 지정합니다.
+         * @param eventKey 이벤트 key
+         * @param customUserPath 사용자 정의 경로
+         * @author hanyj
+         * @since  v1.0.0 2023.08.30
+         */
+        @NonNull
+        public static EventBuilder event(@NonNull String eventKey, @Nullable String customUserPath){
+            return new EventBuilder(getInstance(), eventKey, customUserPath);
+        }
 
+        /**
+         * 수집할 화면 경로 및 타이틀을 지정합니다.
+         * @param pagePath 페이지 경로
+         * @param pageTitle 페이지 제목
+         * @param customUserPath 사용자 정의 경로
+         * @author hanyj
+         * @since  v1.0.0 2023.08.30
+         */
+        @NonNull
+        public static PageViewBuilder pageView(@NonNull String pagePath, @Nullable String pageTitle, @Nullable String customUserPath){
+            return new PageViewBuilder(getInstance(), pagePath, pageTitle, customUserPath);
+        }
 
+        /**
+         * EventPushBuilder PageView Builder 클래스입니다.
+         * <pre>
+         *     // 단순 화면 경로 수집
+         *     TagWorks.EventPushBuilder
+         *          .pageView("MainActivity/HomeFragment", "HomePage")
+         *          .push();
+         *     // 사용자 정의 디멘전을 포함한 경로 수집
+         *     TagWorks.EventPushBuilder
+         *          .pageView("MainActivity/HomeFragment", "HomePage")
+         *          .dimension(1, "customDimension1")
+         *          .dimension(99, "customDimension99")
+         *          .push();
+         * </pre>
+         * @author hanyj
+         * @version v1.0. 02023.08.30
+         */
+        protected static class PageViewBuilder extends BaseBuilder{
 
+            private final String pagePath;
+            private final String pageTitle;
+            private final String customUserPath;
 
+            /**
+             * PageViewBuilder 클래스 생성자 입니다.
+             * @param tagWorks TagWorks 인스턴스
+             * @param pagePath Page 경로
+             * @param pageTitle Page 타이틀
+             * @param customUserPath 사용자 정의 경로
+             * @author hanyj
+             * @since  v1.0.0 2023.08.30
+             */
+            public PageViewBuilder(@NonNull TagWorks tagWorks, @NonNull String pagePath, @Nullable String pageTitle, @Nullable String customUserPath) {
+                super(tagWorks);
+                this.pagePath = pagePath;
+                this.pageTitle = pageTitle;
+                this.customUserPath = customUserPath;
+            }
 
+            /**
+             * PageView 사용자 정의 디멘전을 지정합니다.
+             * @param index 디멘전 index
+             * @param value 디멘전 value
+             * @return PageViewBuilder 인스턴스
+             * @author hanyj
+             * @since  v1.0.0 2023.08.30
+             */
+            @Override
+            public PageViewBuilder dimension(int index, @NonNull String value) {
+                dimensions.put(index, value);
+                return this;
+            }
 
+            /**
+             * 이벤트 객체를 이벤트 큐에 적재합니다.
+             * @author hanyj
+             * @since  v1.0.0 2023.08.30
+             */
+            @Override
+            public void push() {
+                Event event = new Event(dimensions);
+                event.setEvent(TagStandardEvent.PAGE_VIEW);
+                event.setEventParams(TagWorksParams.PAGE_TITLE, pageTitle);
+                event.setCustomUserPath(customUserPath);
+                tagWorks.setContentUrl(pagePath);
+                tagWorks.eventPush(event);
+            }
+        }
 
+        /**
+         * EventPushBuilder Event Builder 클래스입니다.
+         * <pre>
+         *     // Standard 이벤트 수집
+         *     TagWorks.EventPushBuilder
+         *          .event(TagStandardEvent.Click, "Main/HomePage")
+         *          .push();
+         *     // 사용자 정의 이벤트 수집
+         *     TagWorks.EventPushBuilder
+         *          .event("PopupViewExit")
+         *          .dimension(3, "팝업화면 종료")
+         *          .push();
+         * </pre>
+         * @author hanyj
+         * @version v1.0. 02023.08.30
+         */
+        protected static class EventBuilder extends BaseBuilder{
 
+            private final String eventKey;
+            private final String customUserPath;
+            private final HashMap<Integer, String> dimensions = new HashMap<>();
 
+            /**
+             * EventBuilder 클래스 생성자 입니다.
+             * @param tagWorks TagWorks 인스턴스
+             * @param eventKey 이벤트 key
+             * @param customUserPath 사용자 정의 경로
+             * @author hanyj
+             * @since  v1.0.0 2023.08.30
+             */
+            public EventBuilder(@NonNull TagWorks tagWorks, @NonNull String eventKey, @Nullable String customUserPath) {
+                super(tagWorks);
+                this.eventKey = eventKey;
+                this.customUserPath = customUserPath;
+            }
 
+            /**
+             * PageView 사용자 정의 디멘전을 지정합니다.
+             * @param index 디멘전 index
+             * @param value 디멘전 value
+             * @return EventBuilder 인스턴스
+             * @author hanyj
+             * @since  v1.0.0 2023.08.30
+             */
+            @Override
+            public EventBuilder dimension(int index, @NonNull String value) {
+                dimensions.put(index, value);
+                return this;
+            }
 
-
-
+            /**
+             * 이벤트 객체를 이벤트 큐에 적재합니다.
+             * @author hanyj
+             * @since  v1.0.0 2023.08.30
+             */
+            @Override
+            public void push() {
+                Event event = new Event(dimensions);
+                event.setEvent(eventKey);
+                event.setCustomUserPath(customUserPath);
+                tagWorks.eventPush(event);
+            }
+        }
+    }
 
     /**
      * 발송 영역
@@ -365,16 +527,16 @@ public class TagWorks {
 
     /**
      * 이벤트를 발송합니다.
-     * @param eventBack 이벤트 객체
+     * @param event 이벤트 객체
      * @author hanyj
      * @since  v1.0.0 2023.08.24
      */
-    private void eventPush(Event eventBack){
+    private void eventPush(Event event){
         synchronized (PUSH_LOCK){
-            injectParams(eventBack);
+            injectParams(event);
             if(!getOptOut()){
                 // add Queue
-                eventTransmitter.transmit(eventBack);
+                eventTransmitter.transmit(event);
             }else{
                 // drop
             }

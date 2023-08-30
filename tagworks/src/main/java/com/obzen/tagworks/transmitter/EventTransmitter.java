@@ -22,7 +22,7 @@ public class EventTransmitter implements Transmitter{
 
     private final LinkedBlockingDeque<Event> queue = new LinkedBlockingDeque<>();
     private volatile long connectionTimeOut = 5 * 1000;
-    private volatile long transmitInterval = 7 * 1000;
+    private volatile long transmitInterval = 5 * 1000;
     private final Object THREAD_LOCK = new Object();
     private final PacketTransfer packetTransfer;
     private final PacketSender packetSender;

@@ -12,11 +12,14 @@ import static com.obzen.tagworks.util.CommonUtil.isEmpty;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.obzen.tagworks.constants.TagStandardEvent;
 import com.obzen.tagworks.constants.TagWorksParams;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -26,9 +29,35 @@ import java.util.Map;
  */
 public class Event extends Base {
 
-    private final HashMap<String, String> eventParams = new HashMap<>();
-    private final HashMap<Integer, String> dimensions = new HashMap<>();
+    private final HashMap<String, String> eventParams = new LinkedHashMap<>();
+    private final Map<Integer, String> dimensions;
     private final StringBuilder baseStringBuilder = new StringBuilder();
+
+    public Event(Map<Integer, String> dimensions){
+        this.dimensions = dimensions;
+    }
+
+    /**
+     * 이벤트 파라미터를 지정합니다.
+     * @param key 파라미터 key
+     * @param value 파라미터 value
+     * @author hanyj
+     * @since  v1.0.0 2023.08.30
+     */
+    public void setEventParams(@NonNull TagWorksParams key, @Nullable String value){
+        if(!isEmpty(value)) eventParams.put(key.getValue(), value);
+    }
+
+    /**
+     * 이벤트 파라미터를 지정합니다.
+     * @param key 파라미터 key
+     * @param value 파라미터 value
+     * @author hanyj
+     * @since  v1.0.0 2023.08.30
+     */
+    public void setEventParams(@NonNull String key, @Nullable String value){
+        if(!isEmpty(value)) eventParams.put(key, value);
+    }
 
     /**
      * 이벤트를 지정합니다.
@@ -36,7 +65,21 @@ public class Event extends Base {
      * @author hanyj
      * @since  v1.0.0 2023.08.23
      */
-    public void setEvent(String key){
+    public void setEvent(@NonNull TagStandardEvent key){
+        eventParams.put(TagWorksParams.TAG_EVENT_TYPE.getValue(), key.getValue());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneOffset.UTC);
+            eventParams.put(TagWorksParams.CLIENT_DATE.getValue(), zonedDateTime.format(DateTimeFormatter.ofPattern(PATTERN_DATE_FORMAT)));
+        }
+    }
+
+    /**
+     * 이벤트를 지정합니다.
+     * @param key 이벤트 key
+     * @author hanyj
+     * @since  v1.0.0 2023.08.23
+     */
+    public void setEvent(@NonNull String key){
         eventParams.put(TagWorksParams.TAG_EVENT_TYPE.getValue(), key);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneOffset.UTC);
@@ -56,6 +99,7 @@ public class Event extends Base {
 
     /**
      * 사용자 정의 경로를 지정합니다.
+     *
      * @param userPath 사용자 정의 경로
      * @author hanyj
      * @since  v1.0.0 2023.08.23
@@ -66,6 +110,7 @@ public class Event extends Base {
 
     /**
      * 디멘전을 지정합니다.
+     * @deprecated
      * @param dimensions 사용자 정의 디멘전
      * @author hanyj
      * @since  v1.0.0 2023.08.23
@@ -80,6 +125,7 @@ public class Event extends Base {
 
     /**
      * 디멘전을 반환합니다.
+     * @deprecated
      * @return 사용자 정의 디멘전
      * @author hanyj
      * @since  v1.0.0 2023.08.23
@@ -90,6 +136,7 @@ public class Event extends Base {
 
     /**
      * 사용자 정의 디멘전을 지정합니다.
+     * @deprecated
      * @param index 디멘전 index
      * @param value 디멘전 value
      * @author hanyj
@@ -101,6 +148,7 @@ public class Event extends Base {
 
     /**
      * 사용자 정의 디멘전 value를 반환합니다.
+     * @deprecated
      * @param index 디멘전 index
      * @return 디멘전 value
      * @author hanyj
@@ -116,6 +164,7 @@ public class Event extends Base {
      * @author hanyj
      * @since  v1.0.0 2023.08.23
      */
+    @NonNull
     private String serializeEventParams(){
         StringBuilder eventStringBuilder = new StringBuilder();
         for (Map.Entry<String, String> entry : eventParams.entrySet()) {
@@ -130,6 +179,7 @@ public class Event extends Base {
      * @author hanyj
      * @since  v1.0.0 2023.08.23
      */
+    @NonNull
     private String serializeDimensions(){
         StringBuilder dimensionStringBuilder = new StringBuilder();
         for (Map.Entry<Integer, String> entry : dimensions.entrySet()) {
