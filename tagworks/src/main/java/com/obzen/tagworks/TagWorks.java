@@ -20,7 +20,6 @@ import com.obzen.tagworks.constants.StandardEventParams;
 import com.obzen.tagworks.data.Event;
 import com.obzen.tagworks.dispatcher.EventDispatcher;
 import com.obzen.tagworks.dispatcher.PacketSender;
-import com.obzen.tagworks.dispatcher.PacketTransfer;
 import com.obzen.tagworks.util.PreferencesUtil;
 import java.util.HashMap;
 import java.util.Map;
@@ -157,8 +156,10 @@ public class TagWorks {
         this.deviceInfo = new DeviceInfo(context);
         this.dimensions = new HashMap<>();
         this.eventDispatcher = new EventDispatcher(
-                new PacketTransfer(baseUrl),
-                new PacketSender()
+                new PacketSender(baseUrl, config.getSessionTimeOut()),
+                config.getDispatchInterval(),
+                config.getDispatchRetryCount(),
+                config.isManualDispatch()
         );
     }
 

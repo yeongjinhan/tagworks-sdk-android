@@ -27,15 +27,27 @@ public final class TagWorksConfig {
 
     private final String siteId;
     private final String baseUrl;
+    private final long sessionTimeOut;
+    private final long dispatchInterval;
+    private final int dispatchRetryCount;
+    private final boolean manualDispatch;
 
     public static final class Builder {
         private String siteId;
         private String baseUrl;
+        private long sessionTimeOut = 30;
+        private long dispatchInterval = 5 * 1000;
+        private int dispatchRetryCount = 3;
+        private boolean manualDispatch = false;
         public Builder(){}
 
         public Builder(@NonNull TagWorksConfig config) {
             this.siteId = config.siteId;
             this.baseUrl = config.baseUrl;
+            this.sessionTimeOut = config.sessionTimeOut;
+            this.dispatchInterval = config.dispatchInterval;
+            this.dispatchRetryCount = config.dispatchRetryCount;
+            this.manualDispatch = config.manualDispatch;
         }
 
         @NonNull
@@ -50,15 +62,39 @@ public final class TagWorksConfig {
             return this;
         }
 
+        public Builder setSessionTimeOut(long sessionTimeOut){
+            this.sessionTimeOut = sessionTimeOut;
+            return this;
+        }
+
+        public Builder setDispatchInterval(long dispatchInterval) {
+            this.dispatchInterval = dispatchInterval;
+            return this;
+        }
+
+        public Builder setDispatchRetryCount(int dispatchRetryCount){
+            this.dispatchRetryCount = dispatchRetryCount;
+            return this;
+        }
+
+        public Builder setManualDispatch(boolean manualDispatch){
+            this.manualDispatch = manualDispatch;
+            return this;
+        }
+
         @NonNull
         public TagWorksConfig build(){
-            return new TagWorksConfig(siteId, baseUrl);
+            return new TagWorksConfig(siteId, baseUrl, sessionTimeOut, dispatchInterval, dispatchRetryCount, manualDispatch);
         }
     }
 
-    private TagWorksConfig(@NonNull String siteId, @NonNull String baseUrl) {
+    private TagWorksConfig(@NonNull String siteId, @NonNull String baseUrl, long sessionTimeOut, long dispatchInterval, int dispatchRetryCount, boolean manualDispatch) {
         this.siteId = siteId;
         this.baseUrl = baseUrl;
+        this.sessionTimeOut = sessionTimeOut;
+        this.dispatchInterval = dispatchInterval;
+        this.dispatchRetryCount = dispatchRetryCount;
+        this.manualDispatch = manualDispatch;
     }
 
     @NonNull
@@ -71,4 +107,19 @@ public final class TagWorksConfig {
         return baseUrl;
     }
 
+    public long getSessionTimeOut(){
+        return sessionTimeOut;
+    }
+
+    public long getDispatchInterval(){
+        return dispatchInterval;
+    }
+
+    public int getDispatchRetryCount(){
+        return dispatchRetryCount;
+    }
+
+    public boolean isManualDispatch(){
+        return manualDispatch;
+    }
 }
