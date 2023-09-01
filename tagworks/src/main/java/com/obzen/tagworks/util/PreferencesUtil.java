@@ -13,10 +13,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 
 /**
- * TagWorks SharedPreferences 관리 클래스입니다.
- *
- * @author hanyj
- * @version v1.0.0 2023.08.10
+ * The type Preferences util.
  */
 public class PreferencesUtil {
     private static final String PREFERENCES_TAG = "com.obzen.tagworks";

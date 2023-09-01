@@ -12,10 +12,7 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 
 /**
- * BaseBuilder
- *
- * @author hanyj
- * @version v1.0.0 2023.08.11
+ * The type Base builder.
  */
 public abstract class BaseBuilder {
     /**

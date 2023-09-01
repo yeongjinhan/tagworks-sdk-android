@@ -14,10 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TagWorks SDK 내에서 사용되는 Util 클래스입니다.
- *
- * @author hanyj
- * @version v1.0.0 2023.08.14
+ * The type Common util.
  */
 public class CommonUtil {
 

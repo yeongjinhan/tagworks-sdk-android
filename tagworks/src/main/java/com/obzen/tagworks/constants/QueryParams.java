@@ -8,10 +8,7 @@
 package com.obzen.tagworks.constants;
 
 /**
- * TagWorks 쿼리 파라미터 상수 클래스입니다.
- *
- * @author hanyj
- * @version v1.0.0 2023.08.23
+ * The enum Query params.
  */
 public enum QueryParams {
 

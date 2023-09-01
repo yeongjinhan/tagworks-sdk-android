@@ -13,10 +13,7 @@ import java.net.URL;
 import java.util.regex.Pattern;
 
 /**
- * TagWorks 유효성 검증 유틸 클래스입니다.
- *
- * @author hanyj
- * @version v1.0.0 2023.08.10
+ * The type Verification util.
  */
 public final class VerificationUtil {
 
@@ -25,12 +22,9 @@ public final class VerificationUtil {
     private static final String PATTERN_VALID_UUID = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
 
     /**
-     * siteId 값의 유효성을 검증합니다.
+     * Check valid site id.
      *
-     * @param value TagWorks 수집 컨테이너 siteId 값
-     * @throws RuntimeException 유효하지 않은 SiteId
-     * @author hanyj
-     * @since v1.0.0 2023.08.10
+     * @param value the value
      */
     public static void checkValidSiteId(@NonNull String value){
         try{
@@ -45,12 +39,9 @@ public final class VerificationUtil {
     }
 
     /**
-     * 수집서버 주소 값의 유효성을 검증합니다.
+     * Check valid base url.
      *
-     * @param value TagWorks 수집서버 baseUrl 값
-     * @throws RuntimeException 유효하지 않은 baseUrl
-     * @author hanyj
-     * @since v1.0.0 2023.08.10
+     * @param value the value
      */
     public static void checkValidBaseUrl(@NonNull String value){
         try {
@@ -61,13 +52,10 @@ public final class VerificationUtil {
     }
 
     /**
-     * VisitorId의 유효성을 검증합니다.
+     * Check valid visitor id boolean.
      *
-     * @param value TagWorks VisitorId 값
-     * @return 유효성 여부
-     * @throws RuntimeException 유효하지 않은 VisitorId
-     * @author hanyj
-     * @since v1.0.0 2023.08.10
+     * @param value the value
+     * @return the boolean
      */
     public static boolean checkValidVisitorId(@NonNull String value){
         try{

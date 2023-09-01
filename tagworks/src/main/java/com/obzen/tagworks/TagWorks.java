@@ -26,20 +26,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * TagWorks SDK 메인 클래스입니다.
- * <pre>
- *     TagWorks.initializeSdk();
- *     TagWorks.getInstance();
- * </pre>
- *
- * @author hanyj
- * @version v1.0. 02023.08.10
+ * The type Tag works.
  */
 public class TagWorks {
-
-    /**
-     * SDK 설정영역
-     */
 
     private static final String PRE_KEY_VISITOR_ID = "tagworks.visitorid";
     private static final String PRE_KEY_USER_ID = "tagworks.userid";
@@ -55,55 +44,45 @@ public class TagWorks {
     private final String baseUrl;
 
     /**
-     * TagWorks 수집 컨테이너 siteId를 반환합니다.
+     * Get site id string.
      *
-     * @return TagWorks 수집 컨테이너 siteId
-     * @author hanyj
-     * @since v1.0.0 2023.08.14
+     * @return the string
      */
     public String getSiteId(){
         return siteId;
     }
 
     /**
-     * TagWorks 수집서버 주소 url을 반환합니다.
+     * Get base url string.
      *
-     * @return TagWorks 수집서버 주소 url
-     * @author hanyj
-     * @since v1.0.0 2023.08.14
+     * @return the string
      */
     public String getBaseUrl(){
         return baseUrl;
     }
 
     /**
-     * 사용자 식별자를 지정합니다.
+     * Set user id.
      *
-     * @param userId 방문자 식별자
-     * @author hanyj
-     * @since v1.0.0 2023.08.14
+     * @param userId the user id
      */
     public void setUserId(String userId){
         PreferencesUtil.setString(context, PRE_KEY_USER_ID, userId);
     }
 
     /**
-     * 사용자 식별자를 반환합니다.
+     * Get user id string.
      *
-     * @return 사용자 식별자
-     * @author hanyj
-     * @since v1.0.0 2023.08.14
+     * @return the string
      */
     public String getUserId(){
         return PreferencesUtil.getString(context, PRE_KEY_USER_ID);
     }
 
     /**
-     * 방문자 식별자를 지정합니다.
+     * Set visitor id.
      *
-     * @param visitorId 방문자 식별자
-     * @author hanyj
-     * @since v1.0.0 2023.08.14
+     * @param visitorId the visitor id
      */
     public void setVisitorId(String visitorId){
         if(checkValidVisitorId(visitorId)){
@@ -112,11 +91,9 @@ public class TagWorks {
     }
 
     /**
-     * 방문자 식별자를 반환합니다.
+     * Get visitor id string.
      *
-     * @return 방문자 식별자
-     * @author hanyj
-     * @since v1.0.0 2023.08.14
+     * @return the string
      */
     public String getVisitorId(){
         String visitorId = PreferencesUtil.getString(context, PRE_KEY_VISITOR_ID);
@@ -128,34 +105,23 @@ public class TagWorks {
     }
 
     /**
-     * 이벤트 수집 여부를 지정합니다.
+     * Set opt out.
      *
-     * @param optOut 이벤트 수집 여부
-     * @author hanyj
-     * @since v1.0.0 2023.08.14
+     * @param optOut the opt out
      */
     public void setOptOut(boolean optOut){
         PreferencesUtil.setBoolean(context, PRE_KEY_OPT_OUT, optOut);
     }
 
     /**
-     * 이벤트 수집 여부를 반환합니다.
+     * Get opt out boolean.
      *
-     * @return 이벤트 수집 여부
-     * @author hanyj
-     * @since v1.0.0 2023.08.14
+     * @return the boolean
      */
     public boolean getOptOut(){
         return PreferencesUtil.getBoolean(context, PRE_KEY_OPT_OUT);
     }
 
-    /**
-     * TagWorks 클래스 생성자 입니다.
-     * @param context Application Context
-     * @param config TagWorks SDK 설정 객체
-     * @author hanyj
-     * @since  v1.0.0 2023.08.11
-     */
     private TagWorks(@NonNull Context context, @NonNull TagWorksConfig config){
         this.context = context;
         this.config = config;
@@ -173,12 +139,9 @@ public class TagWorks {
     }
 
     /**
-     * TagWorks Instance 를 반환합니다.
+     * Get instance tag works.
      *
-     * @return TagWorks 인스턴스
-     * @throws IllegalStateException TagWorks 인스턴스가 초기화되지 않음
-     * @author hanyj
-     * @since v1.0.0 2023.08.11
+     * @return the tag works
      */
     @NonNull
     public static TagWorks getInstance(){
@@ -192,14 +155,12 @@ public class TagWorks {
     }
 
     /**
-     * TagWorks SDK를 초기화합니다.
+     * Initialize sdk tag works.
      *
-     * @param context Application Context
-     * @param siteId  TagWorks 수집 컨테이너 siteId
-     * @param baseUrl TagWorks 수집서버 주소 url
-     * @return TagWorks 인스턴스
-     * @author hanyj
-     * @since v1.0.0 2023.08.10
+     * @param context the context
+     * @param siteId  the site id
+     * @param baseUrl the base url
+     * @return the tag works
      */
     @NonNull
     public static TagWorks initializeSdk(@NonNull Context context, @NonNull String siteId, @NonNull String baseUrl){
@@ -218,13 +179,11 @@ public class TagWorks {
     }
 
     /**
-     * TagWorks SDK를 초기화합니다.
+     * Initialize sdk tag works.
      *
-     * @param context Application Context
-     * @param config  TagWorks SDK 설정 객체
-     * @return TagWorks 인스턴스
-     * @author hanyj
-     * @since v1.0.0 2023.08.10
+     * @param context the context
+     * @param config  the config
+     * @return the tag works
      */
     @NonNull
     public static TagWorks initializeSdk(@NonNull Context context, @NonNull TagWorksConfig config){
@@ -238,14 +197,6 @@ public class TagWorks {
         }
     }
 
-    /**
-     * TagWorks SDK를 초기화합니다.
-     * @param context Application Context
-     * @param config TagWorks SDK 설정 객체
-     * @return TagWorks 인스턴스
-     * @author hanyj
-     * @since  v1.0.0 2023.08.11
-     */
     @NonNull
     private static TagWorks initialize(@NonNull Context context, @NonNull TagWorksConfig config){
         final TagWorks instance;
@@ -256,9 +207,6 @@ public class TagWorks {
         }
     }
 
-    /**
-     * 수집 영역
-     */
     private final String contentBaseUrl;
     private String contentUrl;
     private String contentReferrerUrl;
@@ -266,79 +214,61 @@ public class TagWorks {
     private final DeviceInfo deviceInfo;
 
     /**
-     * 현재 contentUrl을 지정합니다.
+     * Set content url.
      *
-     * @param path contentUrl path
-     * @author hanyj
-     * @since v1.0.0 2023.08.11
+     * @param path the path
      */
     public void setContentUrl(String path){
         contentUrl = contentBaseUrl + path;
     }
 
     /**
-     * 현재 contentUrl을 반환합니다.
+     * Get content url string.
      *
-     * @return 현재 contentUrl
-     * @author hanyj
-     * @since v1.0.0 2023.08.11
+     * @return the string
      */
     public String getContentUrl(){
         return contentUrl;
     }
 
     /**
-     * 기기의 UserAgnet를 반환합니다.
+     * Get user agent string.
      *
-     * @return UserAgnet string
-     * @author hanyj
-     * @since v1.0.0 2023.08.21
+     * @return the string
      */
     public String getUserAgent(){
         return deviceInfo.getUserAgent();
     }
 
     /**
-     * 공용 사용자 정의 디멘전을 지정합니다.
+     * Set dimension.
      *
-     * @param index 디멘전 index
-     * @param value 디멘전 value
-     * @author hanyj
-     * @since v1.0.0 2023.08.21
+     * @param index the index
+     * @param value the value
      */
     public void setDimension(int index, String value){
         dimensions.put(index, value);
     }
 
     /**
-     * 공용 사용자 정의 디멘전 value를 반환합니다.
+     * Get dimension string.
      *
-     * @param index 디멘전 index
-     * @return 디멘전 value
-     * @author hanyj
-     * @since v1.0.0 2023.08.21
+     * @param index the index
+     * @return the string
      */
     public String getDimension(int index){
         return dimensions.get(index);
     }
 
     /**
-     * 공용 사용자 정의 디멘전을 반환합니다.
+     * Get dimensions hash map.
      *
-     * @return 디멘전 Map
-     * @author hanyj
-     * @since v1.0.0 2023.08.21
+     * @return the hash map
      */
     public HashMap<Integer, String> getDimensions(){
         return dimensions;
     }
 
-    /**
-     * Query 파라미터를 주입합니다.
-     * @param event 이벤트 객체
-     * @author hanyj
-     * @since  v1.0.0 2023.08.21
-     */
     private void injectParams(@NonNull Event event){
         event.setVisitorId(getVisitorId());
         event.setParams(QueryParams.SITE_ID, siteId);
@@ -355,25 +285,16 @@ public class TagWorks {
     }
 
     /**
-     * TagWorks 이벤트 수집 Builder 클래스입니다.
-     * <pre>
-     *     TagWorks.EventPushBuilder.event();
-     *     TagWorks.EventPushBuilder.pageView();
-     * </pre>
-     *
-     * @author hanyj
-     * @version v1.0. 02023.08.30
+     * The type Event push builder.
      */
     public static class EventPushBuilder{
 
         /**
-         * 수집할 이벤트를 지정합니다.
+         * Event event builder.
          *
-         * @param eventKey       이벤트 key
-         * @param customUserPath 사용자 정의 경로
+         * @param eventKey       the event key
+         * @param customUserPath the custom user path
          * @return the event builder
-         * @author hanyj
-         * @since v1.0.0 2023.08.30
          */
         @NonNull
         public static EventBuilder event(@NonNull StandardEvent eventKey, @Nullable String customUserPath){
@@ -381,13 +302,11 @@ public class TagWorks {
         }
 
         /**
-         * 수집할 이벤트를 지정합니다.
+         * Event event builder.
          *
-         * @param eventKey       이벤트 key
-         * @param customUserPath 사용자 정의 경로
+         * @param eventKey       the event key
+         * @param customUserPath the custom user path
          * @return the event builder
-         * @author hanyj
-         * @since v1.0.0 2023.08.30
          */
         @NonNull
         public static EventBuilder event(@NonNull String eventKey, @Nullable String customUserPath){
@@ -395,14 +314,12 @@ public class TagWorks {
         }
 
         /**
-         * 수집할 화면 경로 및 타이틀을 지정합니다.
+         * Page view page view builder.
          *
-         * @param pagePath       페이지 경로
-         * @param pageTitle      페이지 제목
-         * @param customUserPath 사용자 정의 경로
+         * @param pagePath       the page path
+         * @param pageTitle      the page title
+         * @param customUserPath the custom user path
          * @return the page view builder
-         * @author hanyj
-         * @since v1.0.0 2023.08.30
          */
         @NonNull
         public static PageViewBuilder pageView(@NonNull String pagePath, @Nullable String pageTitle, @Nullable String customUserPath){
@@ -410,22 +327,7 @@ public class TagWorks {
         }
 
         /**
-         * EventPushBuilder PageView Builder 클래스입니다.
-         * <pre>
-         *     // 단순 화면 경로 수집
-         *     TagWorks.EventPushBuilder
-         *          .pageView("MainActivity/HomeFragment", "HomePage")
-         *          .push();
-         *     // 사용자 정의 디멘전을 포함한 경로 수집
-         *     TagWorks.EventPushBuilder
-         *          .pageView("MainActivity/HomeFragment", "HomePage")
-         *          .dimension(1, "customDimension1")
-         *          .dimension(99, "customDimension99")
-         *          .push();
-         * </pre>
-         *
-         * @author hanyj
-         * @version v1.0. 02023.08.30
+         * The type Page view builder.
          */
         protected static class PageViewBuilder extends BaseBuilder{
 
@@ -434,14 +336,12 @@ public class TagWorks {
             private final String customUserPath;
 
             /**
-             * PageViewBuilder 클래스 생성자 입니다.
+             * Instantiates a new Page view builder.
              *
-             * @param tagWorks       TagWorks 인스턴스
-             * @param pagePath       Page 경로
-             * @param pageTitle      Page 타이틀
-             * @param customUserPath 사용자 정의 경로
-             * @author hanyj
-             * @since v1.0.0 2023.08.30
+             * @param tagWorks       the tag works
+             * @param pagePath       the page path
+             * @param pageTitle      the page title
+             * @param customUserPath the custom user path
              */
             public PageViewBuilder(@NonNull TagWorks tagWorks, @NonNull String pagePath, @Nullable String pageTitle, @Nullable String customUserPath) {
                 super(tagWorks);
@@ -450,25 +350,12 @@ public class TagWorks {
                 this.customUserPath = customUserPath;
             }
 
-            /**
-             * PageView 사용자 정의 디멘전을 지정합니다.
-             * @param index 디멘전 index
-             * @param value 디멘전 value
-             * @return PageViewBuilder 인스턴스
-             * @author hanyj
-             * @since  v1.0.0 2023.08.30
-             */
             @Override
             public PageViewBuilder dimension(int index, @NonNull String value) {
                 dimensions.put(index, value);
                 return this;
             }
 
-            /**
-             * 이벤트 객체를 이벤트 큐에 적재합니다.
-             * @author hanyj
-             * @since  v1.0.0 2023.08.30
-             */
             @Override
             public void push() {
                 Event event = new Event(dimensions);
@@ -481,21 +368,7 @@ public class TagWorks {
         }
 
         /**
-         * EventPushBuilder Event Builder 클래스입니다.
-         * <pre>
-         *     // Standard 이벤트 수집
-         *     TagWorks.EventPushBuilder
-         *          .event(TagStandardEvent.Click, "Main/HomePage")
-         *          .push();
-         *     // 사용자 정의 이벤트 수집
-         *     TagWorks.EventPushBuilder
-         *          .event("PopupViewExit")
-         *          .dimension(3, "팝업화면 종료")
-         *          .push();
-         * </pre>
-         *
-         * @author hanyj
-         * @version v1.0. 02023.08.30
+         * The type Event builder.
          */
         protected static class EventBuilder extends BaseBuilder{
 
@@ -504,13 +377,11 @@ public class TagWorks {
             private final HashMap<Integer, String> dimensions = new HashMap<>();
 
             /**
-             * EventBuilder 클래스 생성자 입니다.
+             * Instantiates a new Event builder.
              *
-             * @param tagWorks       TagWorks 인스턴스
-             * @param eventKey       이벤트 key
-             * @param customUserPath 사용자 정의 경로
-             * @author hanyj
-             * @since v1.0.0 2023.08.30
+             * @param tagWorks       the tag works
+             * @param eventKey       the event key
+             * @param customUserPath the custom user path
              */
             public EventBuilder(@NonNull TagWorks tagWorks, @NonNull String eventKey, @Nullable String customUserPath) {
                 super(tagWorks);
@@ -518,25 +389,12 @@ public class TagWorks {
                 this.customUserPath = customUserPath;
             }
 
-            /**
-             * PageView 사용자 정의 디멘전을 지정합니다.
-             * @param index 디멘전 index
-             * @param value 디멘전 value
-             * @return EventBuilder 인스턴스
-             * @author hanyj
-             * @since  v1.0.0 2023.08.30
-             */
             @Override
             public EventBuilder dimension(int index, @NonNull String value) {
                 dimensions.put(index, value);
                 return this;
             }
 
-            /**
-             * 이벤트 객체를 이벤트 큐에 적재합니다.
-             * @author hanyj
-             * @since  v1.0.0 2023.08.30
-             */
             @Override
             public void push() {
                 Event event = new Event(dimensions);
@@ -547,18 +405,8 @@ public class TagWorks {
         }
     }
 
-    /**
-     * 발송 영역
-     */
-
     private final EventDispatcher eventDispatcher;
 
-    /**
-     * 이벤트를 발송합니다.
-     * @param event 이벤트 객체
-     * @author hanyj
-     * @since  v1.0.0 2023.08.24
-     */
     private void eventPush(Event event){
         synchronized (PUSH_LOCK){
             injectParams(event);

@@ -8,10 +8,7 @@
 package com.obzen.tagworks.constants;
 
 /**
- * TagWorks Event 파라미터 상수입니다.
- *
- * @author hanyj
- * @version v1.0.0 2023.08.11
+ * The enum Standard event.
  */
 public enum StandardEvent {
 

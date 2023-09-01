@@ -19,10 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 수집 데이터의 추상 클래스입니다.
- *
- * @author hanyj
- * @version v1.0.0 2023.08.21
+ * The type Base.
  */
 public class Base {
 
@@ -44,35 +41,29 @@ public class Base {
     protected final HashMap<String, String> params = new LinkedHashMap<>();
 
     /**
-     * 파라미터를 지정합니다.
+     * Set params.
      *
-     * @param key   파라미터 key
-     * @param value 파라미터 value
-     * @author hanyj
-     * @since v1.0.0 2023.08.23
+     * @param key   the key
+     * @param value the value
      */
     public void setParams(String key, @Nullable String value){
         if(!isEmpty(value)) params.put(key, value);
     }
 
     /**
-     * 파라미터를 지정합니다.
+     * Set params.
      *
-     * @param queryParam 파라미터 key
-     * @param value      파라미터 value
-     * @author hanyj
-     * @since v1.0.0 2023.08.23
+     * @param queryParam the query param
+     * @param value      the value
      */
     public void setParams(QueryParams queryParam, @Nullable  String value){
         if(!isEmpty(value)) params.put(queryParam.getValue(), value);
     }
 
     /**
-     * 데이터를 문자열로 반환합니다.
+     * To serialize string string.
      *
-     * @return 데이터 문자열
-     * @author hanyj
-     * @since v1.0.0 2023.08.23
+     * @return the string
      */
     @NonNull
     public String toSerializeString() {
@@ -95,11 +86,9 @@ public class Base {
     }
 
     /**
-     * 데이터를 Map으로 반환합니다.
+     * To map map.
      *
-     * @return 데이터 문자열
-     * @author hanyj
-     * @since v1.0.0 2023.08.24
+     * @return the map
      */
     public Map<String, String> toMap(){
         return new LinkedHashMap<>(params);

@@ -23,13 +23,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 이벤트 데이터 클래스입니다.
- *
- * @author hanyj
- * @version v1.0.0 2023.08.21
+ * The type Event.
  */
 public class Event extends Base {
 
+    private final static String DEVICE_TYPE = "app";
     private final HashMap<String, String> eventParams = new LinkedHashMap<>();
     private final Map<Integer, String> dimensions;
     private final StringBuilder baseStringBuilder = new StringBuilder();
@@ -44,38 +42,33 @@ public class Event extends Base {
     }
 
     /**
-     * 이벤트 파라미터를 지정합니다.
+     * Set event params.
      *
-     * @param key   파라미터 key
-     * @param value 파라미터 value
-     * @author hanyj
-     * @since v1.0.0 2023.08.30
+     * @param key   the key
+     * @param value the value
      */
     public void setEventParams(@NonNull StandardEventParams key, @Nullable String value){
         if(!isEmpty(value)) eventParams.put(key.getValue(), value);
     }
 
     /**
-     * 이벤트 파라미터를 지정합니다.
+     * Set event params.
      *
-     * @param key   파라미터 key
-     * @param value 파라미터 value
-     * @author hanyj
-     * @since v1.0.0 2023.08.30
+     * @param key   the key
+     * @param value the value
      */
     public void setEventParams(@NonNull String key, @Nullable String value){
         if(!isEmpty(value)) eventParams.put(key, value);
     }
 
     /**
-     * 이벤트를 지정합니다.
+     * Set event.
      *
-     * @param key 이벤트 key
-     * @author hanyj
-     * @since v1.0.0 2023.08.23
+     * @param key the key
      */
     public void setEvent(@NonNull StandardEvent key){
         eventParams.put(StandardEventParams.TAG_EVENT_TYPE.getValue(), key.getValue());
+        eventParams.put(StandardEventParams.DEVICE_TYPE.getValue(), DEVICE_TYPE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneOffset.UTC);
             eventParams.put(StandardEventParams.CLIENT_DATE.getValue(), zonedDateTime.format(DateTimeFormatter.ofPattern(PATTERN_DATE_FORMAT)));
@@ -83,14 +76,13 @@ public class Event extends Base {
     }
 
     /**
-     * 이벤트를 지정합니다.
+     * Set event.
      *
-     * @param key 이벤트 key
-     * @author hanyj
-     * @since v1.0.0 2023.08.23
+     * @param key the key
      */
     public void setEvent(@NonNull String key){
         eventParams.put(StandardEventParams.TAG_EVENT_TYPE.getValue(), key);
+        eventParams.put(StandardEventParams.DEVICE_TYPE.getValue(), DEVICE_TYPE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneOffset.UTC);
             eventParams.put(StandardEventParams.CLIENT_DATE.getValue(), zonedDateTime.format(DateTimeFormatter.ofPattern(PATTERN_DATE_FORMAT)));
@@ -98,34 +90,27 @@ public class Event extends Base {
     }
 
     /**
-     * 방문자 식별자를 지정합니다.
+     * Set visitor id.
      *
-     * @param visitorId 방문자 식별자
-     * @author hanyj
-     * @since v1.0.0 2023.08.23
+     * @param visitorId the visitor id
      */
     public void setVisitorId(@Nullable String visitorId){
         if(!isEmpty(visitorId)) eventParams.put(StandardEventParams.VISITOR_ID.getValue(), visitorId);
     }
 
     /**
-     * 사용자 정의 경로를 지정합니다.
+     * Set custom user path.
      *
-     * @param userPath 사용자 정의 경로
-     * @author hanyj
-     * @since v1.0.0 2023.08.23
+     * @param userPath the user path
      */
     public void setCustomUserPath(@Nullable String userPath){
         if(!isEmpty(userPath)) eventParams.put(StandardEventParams.CUSTOM_USER_PATH.getValue(), userPath);
     }
 
     /**
-     * 디멘전을 지정합니다.
+     * Set dimensions.
      *
-     * @param dimensions 사용자 정의 디멘전
-     * @author hanyj
-     * @since v1.0.0 2023.08.23
-     * @deprecated
+     * @param dimensions the dimensions
      */
     public void setDimensions(Map<Integer, String> dimensions){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -136,49 +121,34 @@ public class Event extends Base {
     }
 
     /**
-     * 디멘전을 반환합니다.
+     * Get dimensions map.
      *
-     * @return 사용자 정의 디멘전
-     * @author hanyj
-     * @since v1.0.0 2023.08.23
-     * @deprecated
+     * @return the map
      */
     public Map<Integer, String> getDimensions(){
         return dimensions;
     }
 
     /**
-     * 사용자 정의 디멘전을 지정합니다.
+     * Set dimension.
      *
-     * @param index 디멘전 index
-     * @param value 디멘전 value
-     * @author hanyj
-     * @since v1.0.0 2023.08.21
-     * @deprecated
+     * @param index the index
+     * @param value the value
      */
     public void setDimension(int index, String value){
         dimensions.put(index, value);
     }
 
     /**
-     * 사용자 정의 디멘전 value를 반환합니다.
+     * Get dimension string.
      *
-     * @param index 디멘전 index
-     * @return 디멘전 value
-     * @author hanyj
-     * @since v1.0.0 2023.08.21
-     * @deprecated
+     * @param index the index
+     * @return the string
      */
     public String getDimension(int index){
         return dimensions.get(index);
     }
 
-    /**
-     * 이벤트를 문자열로 반환합니다.
-     * @return 이벤트 문자열
-     * @author hanyj
-     * @since  v1.0.0 2023.08.23
-     */
     @NonNull
     private String serializeEventParams(){
         StringBuilder eventStringBuilder = new StringBuilder();
@@ -188,12 +158,6 @@ public class Event extends Base {
         return eventStringBuilder.toString();
     }
 
-    /**
-     * 디멘전을 문자열로 반환합니다.
-     * @return 디멘전 문자열
-     * @author hanyj
-     * @since  v1.0.0 2023.08.23
-     */
     @NonNull
     private String serializeDimensions(){
         StringBuilder dimensionStringBuilder = new StringBuilder();
@@ -203,12 +167,6 @@ public class Event extends Base {
         return dimensionStringBuilder.toString();
     }
 
-    /**
-     * 데이터를 문자열로 반환합니다.
-     * @return 데이터 문자열
-     * @author hanyj
-     * @since  v1.0.0 2023.08.23
-     */
     @NonNull
     @Override
     public String toString() {

@@ -32,6 +32,7 @@ public class EventDispatcher implements Runnable {
     private final Semaphore THREAD_TOKEN = new Semaphore(0);
     private final LinkedBlockingDeque<Event> eventQueue = new LinkedBlockingDeque<>();
     private volatile long dispatchInterval;
+    @Deprecated
     private volatile int dispatchRetryCount;
     private volatile boolean isRunning = false;
     private volatile boolean manualDispatch;

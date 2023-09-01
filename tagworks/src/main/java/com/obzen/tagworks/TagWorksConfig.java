@@ -11,17 +11,7 @@ import androidx.annotation.NonNull;
 
 
 /**
- * TagWorks SDK 설정 클래스입니다.
- * For example:
- * <pre>
- *     TagWorksConfig config = new TagWorksConfig.Builder()
- *                 .setBaseUrl("https://obzen.com/obzenTagWorks")
- *                 .setSiteId("61,YbIxGr9e")
- *                 .build();
- * </pre>
- *
- * @author hanyj
- * @version v1.0.0 2023.08.10
+ * The type Tag works config.
  */
 public final class TagWorksConfig {
 

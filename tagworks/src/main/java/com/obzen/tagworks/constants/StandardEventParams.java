@@ -35,7 +35,11 @@ public enum StandardEventParams {
     /**
      * Custom user path standard event params.
      */
-    CUSTOM_USER_PATH("obz_user_path");
+    CUSTOM_USER_PATH("obz_user_path"),
+    /**
+     * Device type standard event params.
+     */
+    DEVICE_TYPE("obz_dvc_type");
 
     private final String value;
     StandardEventParams(String value) {
