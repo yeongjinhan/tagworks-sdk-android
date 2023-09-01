@@ -30,7 +30,7 @@ public class TagWorksTest {
                 .build();
 
         // call initializeSdk
-        TagWorks.initializeSdk(appContext, config);
+        TagWorks.initializeSdk(appContext, "http://192.168.20.51:81/obzenTagWorks", "61,YbIxGr9e");
     }
 
     @Test

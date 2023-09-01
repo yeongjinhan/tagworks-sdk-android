@@ -3,11 +3,13 @@
 ![Generic badge](https://img.shields.io/badge/version-1.0.1-green.svg)
 ![Generic badge](https://img.shields.io/badge/license-ApacheLicense2.0-blue.svg)
 ![Generic badge](https://img.shields.io/badge/Platform-Android-red.svg)
+![Generic badge](https://img.shields.io/badge/support-java-yellow.svg)
+![Generic badge](https://img.shields.io/badge/support-kotlin-yellow.svg)
 
 ## Requirements
 
-* 최소 SDK 버전 : 19
-* 최소 JDK 버전 : jdk1.8
+* 최소 Android Sdk 버전 : 19
+* 최소 Jdk 버전 : 1.8
 
 ## Installation
 
@@ -38,11 +40,29 @@
 
   ```kotlin
   dependencies {
-    implementation 'com.obzen.support.Obzen:TagWorks-SDK-Android:<latest-version>'
+      implementation 'com.obzen.support.Obzen:TagWorks-SDK-Android:<latest-version>'
   }
   ```
-
   
+## Getting started
+### 1. initialize SDK
+
+```java
+// TagWorksConfig Builder 클래스를 이용한 초기화
+TagWorksConfig config = new TagWorksConfig.Builder()
+    .setBaseUrl("<https://host:port>")
+    .setSiteId("61,YbIxGr9e")
+    .build();
+
+// initializeSdk 메서드 호출
+TagWorks.initializeSdk(appContext, config);
+```
+
+```java
+// initializeSdk 메서드 호출로 즉시 초기화
+TagWorks.initializeSdk(appContext, "<https://host:port>", "61,YbIxGr9e");
+```
+
 
 ## Author
 
