@@ -45,7 +45,10 @@
   ```
   
 ## Getting started
-### 1. initialize SDK
+### 1. TagWorks 인스턴스 초기화
+
+* TagWorks SDK 인스턴스를 초기화 하기 위해서는 `Application Context` 객체 전달이 필요합니다.
+* TagWorks SDK 인스턴스는 한번만 초기화하면 싱글톤 인스턴스로 유지됩니다.
 
 ```java
 // TagWorksConfig Builder 클래스를 이용한 초기화
