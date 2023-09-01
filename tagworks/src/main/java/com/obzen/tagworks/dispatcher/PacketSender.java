@@ -14,16 +14,31 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * The type Packet sender.
+ */
 public class PacketSender{
 
     private final String targetUrl;
     private final long timeout;
 
+    /**
+     * Instantiates a new Packet sender.
+     *
+     * @param targetUrl the target url
+     * @param timeout   the timeout
+     */
     public PacketSender(String targetUrl, long timeout){
         this.targetUrl = targetUrl;
         this.timeout = timeout;
     }
 
+    /**
+     * Send boolean.
+     *
+     * @param packet the packet
+     * @return the boolean
+     */
     public boolean send(String packet) {
         HttpURLConnection urlConnection = null;
         try{

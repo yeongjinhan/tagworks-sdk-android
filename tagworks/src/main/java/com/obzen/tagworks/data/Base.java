@@ -20,22 +20,36 @@ import java.util.Map;
 
 /**
  * 수집 데이터의 추상 클래스입니다.
+ *
  * @author hanyj
  * @version v1.0.0 2023.08.21
  */
 public class Base {
 
+    /**
+     * The constant PATTERN_DATE_FORMAT.
+     */
     protected static final String PATTERN_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+    /**
+     * The constant DELIMITER_PARAMS.
+     */
     protected static final String DELIMITER_PARAMS = "&";
+    /**
+     * The constant DELIMITER_MAPS.
+     */
     protected static final String DELIMITER_MAPS = "=";
+    /**
+     * The Params.
+     */
     protected final HashMap<String, String> params = new LinkedHashMap<>();
 
     /**
      * 파라미터를 지정합니다.
-     * @param key 파라미터 key
+     *
+     * @param key   파라미터 key
      * @param value 파라미터 value
      * @author hanyj
-     * @since  v1.0.0 2023.08.23
+     * @since v1.0.0 2023.08.23
      */
     public void setParams(String key, @Nullable String value){
         if(!isEmpty(value)) params.put(key, value);
@@ -43,10 +57,11 @@ public class Base {
 
     /**
      * 파라미터를 지정합니다.
+     *
      * @param queryParam 파라미터 key
-     * @param value 파라미터 value
+     * @param value      파라미터 value
      * @author hanyj
-     * @since  v1.0.0 2023.08.23
+     * @since v1.0.0 2023.08.23
      */
     public void setParams(QueryParams queryParam, @Nullable  String value){
         if(!isEmpty(value)) params.put(queryParam.getValue(), value);
@@ -54,9 +69,10 @@ public class Base {
 
     /**
      * 데이터를 문자열로 반환합니다.
+     *
      * @return 데이터 문자열
      * @author hanyj
-     * @since  v1.0.0 2023.08.23
+     * @since v1.0.0 2023.08.23
      */
     @NonNull
     public String toSerializeString() {
@@ -80,9 +96,10 @@ public class Base {
 
     /**
      * 데이터를 Map으로 반환합니다.
+     *
      * @return 데이터 문자열
      * @author hanyj
-     * @since  v1.0.0 2023.08.24
+     * @since v1.0.0 2023.08.24
      */
     public Map<String, String> toMap(){
         return new LinkedHashMap<>(params);

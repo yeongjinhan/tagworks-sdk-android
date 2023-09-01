@@ -23,6 +23,9 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The type Event dispatcher.
+ */
 public class EventDispatcher implements Runnable {
 
     private final Object THREAD_LOCK = new Object();
@@ -35,6 +38,14 @@ public class EventDispatcher implements Runnable {
     private final int pageSize = 20;
     private final PacketSender packetSender;
 
+    /**
+     * Instantiates a new Event dispatcher.
+     *
+     * @param packetSender       the packet sender
+     * @param dispatchInterval   the dispatch interval
+     * @param dispatchRetryCount the dispatch retry count
+     * @param manualDispatch     the manual dispatch
+     */
     public EventDispatcher(PacketSender packetSender,
                            long dispatchInterval,
                            int dispatchRetryCount,
@@ -45,14 +56,29 @@ public class EventDispatcher implements Runnable {
         this.manualDispatch = manualDispatch;
     }
 
+    /**
+     * Set dispatch interval.
+     *
+     * @param dispatchInterval the dispatch interval
+     */
     public void setDispatchInterval(long dispatchInterval){
         this.dispatchInterval = dispatchInterval;
     }
 
+    /**
+     * Set manual dispatch.
+     *
+     * @param manualDispatch the manual dispatch
+     */
     public void setManualDispatch(boolean manualDispatch){
         this.manualDispatch = manualDispatch;
     }
 
+    /**
+     * Enqueue.
+     *
+     * @param event the event
+     */
     public void enqueue(Event event){
         this.eventQueue.add(event);
         start();

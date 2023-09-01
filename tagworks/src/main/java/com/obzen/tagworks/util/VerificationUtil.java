@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 /**
  * TagWorks 유효성 검증 유틸 클래스입니다.
+ *
  * @author hanyj
  * @version v1.0.0 2023.08.10
  */
@@ -61,11 +62,12 @@ public final class VerificationUtil {
 
     /**
      * VisitorId의 유효성을 검증합니다.
+     *
      * @param value TagWorks VisitorId 값
      * @return 유효성 여부
      * @throws RuntimeException 유효하지 않은 VisitorId
      * @author hanyj
-     * @since  v1.0.0 2023.08.10
+     * @since v1.0.0 2023.08.10
      */
     public static boolean checkValidVisitorId(@NonNull String value){
         try{

@@ -17,6 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.Locale;
 
+/**
+ * The type Device info.
+ */
 public class DeviceInfo {
 
     private final Context context;
@@ -28,6 +31,11 @@ public class DeviceInfo {
     private final String model;
     private final String buildId;
 
+    /**
+     * Instantiates a new Device info.
+     *
+     * @param context the context
+     */
     public DeviceInfo(@NonNull Context context){
         this.context = context;
         this.httpAgent = System.getProperty("http.agent");
@@ -39,21 +47,41 @@ public class DeviceInfo {
         this.buildId = Build.ID;
     }
 
+    /**
+     * Get http agent string.
+     *
+     * @return the string
+     */
     @Nullable
     public String getHttpAgent(){
         return httpAgent;
     }
 
+    /**
+     * Get jvm version string.
+     *
+     * @return the string
+     */
     @Nullable
     public String getJvmVersion(){
         return jvmVersion;
     }
 
+    /**
+     * Get language string.
+     *
+     * @return the string
+     */
     @Nullable
     public String getLanguage(){
         return language;
     }
 
+    /**
+     * Get resolution int [ ].
+     *
+     * @return the int [ ]
+     */
     @Nullable
     public int[] getResolution(){
         return resolution;
@@ -73,21 +101,41 @@ public class DeviceInfo {
         }
     }
 
+    /**
+     * Get release string.
+     *
+     * @return the string
+     */
     @Nullable
     public String getRelease(){
         return release;
     }
 
+    /**
+     * Get model string.
+     *
+     * @return the string
+     */
     @Nullable
     public String getModel(){
         return model;
     }
 
+    /**
+     * Get build id string.
+     *
+     * @return the string
+     */
     @Nullable
     public String getBuildId(){
         return buildId;
     }
 
+    /**
+     * Get user agent string.
+     *
+     * @return the string
+     */
     @NonNull
     public String getUserAgent(){
         String httpAgent = getHttpAgent();
