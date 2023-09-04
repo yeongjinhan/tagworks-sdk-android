@@ -14,13 +14,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            multiDexEnabled true
+            minifyEnabled false
+            multiDexEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
-            multiDexEnabled true
+            multiDexEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
