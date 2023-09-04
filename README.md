@@ -1,3 +1,5 @@
+
+
 <img src="https://capsule-render.vercel.app/api?type=Waving&color=E4405F&height=150&section=header&text=TagWorks-SDK-Android&fontSize=45" />
 
 ![Generic badge](https://img.shields.io/badge/version-1.0.1-green.svg)
@@ -54,7 +56,7 @@
 // TagWorksConfig Builder 클래스를 이용한 초기화
 TagWorksConfig config = new TagWorksConfig.Builder()
     .setBaseUrl("<https://host:port>")
-    .setSiteId("61,YbIxGr9e")
+    .setSiteId("<siteId>")
     .build();
 
 // initializeSdk 메서드 호출
@@ -63,7 +65,39 @@ TagWorks.initializeSdk(appContext, config);
 
 ```java
 // initializeSdk 메서드 호출로 즉시 초기화
-TagWorks.initializeSdk(appContext, "<https://host:port>", "61,YbIxGr9e");
+TagWorks.initializeSdk(appContext, "<https://host:port>", "<siteId>");
+```
+
+### 2. 이벤트 수집
+
+```java
+// StandardEvent Event 수집
+TagWorks
+    .EventPushBuilder
+    .event(StandardEvent.CLICK, null)
+    .dimension(6, "테스트버튼")
+    .push();
+
+// Custom Event 수집
+TagWorks
+    .EventPushBuilder
+    .event("CustomEvent", "Main/Home")
+    .dimension(1, "Custom Value1")
+    .diemnsion(2, "Custom Value2")
+    .push();
+```
+
+```java
+-TagWorks
+    .EventPushBuilder
+    .pageView("Main/Home", "메인화면", null)
+    .push();
+
+TagWorks
+    .EventPushBuilder
+    .pageView("Main/Home", "메인화면", null)
+    .dimension(7, "Custom Value7")
+    .push();
 ```
 
 

@@ -10,11 +10,6 @@ android {
     defaultConfig {
         minSdk 19
         targetSdk 33
-        versionCode 1
-        versionName "1.0.1"
-        defaultConfig {
-            testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        }
     }
 
     buildTypes {
@@ -44,4 +39,18 @@ dependencies {
     androidTestImplementation "androidx.test:runner:1.5.2"
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.test:monitor:1.6.1"
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.obzen.tagworks'
+                artifactId = 'tagworks'
+                version  "1.0.2"
+            }
+        }
+    }
 }

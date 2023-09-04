@@ -2,6 +2,7 @@ package com.obzen.tagworks;
 
 import static org.junit.Assert.assertEquals;
 import android.content.Context;
+import android.nfc.Tag;
 import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -64,6 +65,12 @@ public class TagWorksTest {
     public void TagWorksEventTest(){
         TagWorks.getInstance().setDimension(0, "test0");
         TagWorks.getInstance().setDimension(1, "test1");
+
+        TagWorks.EventPushBuilder
+                .event(StandardEvent.CLICK, null)
+                .dimension(6, "테스트버튼")
+                .push();
+
         TagWorks.EventPushBuilder.event(StandardEvent.CLICK,  null).dimension(1, "testzzzz").push();
         sleep(3000);
         TagWorks.EventPushBuilder.pageView("Main/Home", "메인화면", null).push();
