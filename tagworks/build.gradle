@@ -49,7 +49,7 @@ afterEvaluate {
 
                 groupId = 'com.obzen.tagworks'
                 artifactId = 'tagworks'
-                version  "1.0.2"
+                version  "1.0.3"
             }
         }
     }
